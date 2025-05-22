@@ -58,6 +58,7 @@ typedef struct s_executor
 	char				*append_outfile;
 	int 				pipe;
 	struct s_executor	*next;
+	t_main				*program;
 }						t_executor;
 
 typedef struct s_exec
@@ -146,6 +147,7 @@ void					setting_sign(t_main *program);
 
 void					pipe_count(t_exec *node);
 void					prep_exec(t_main *program);
-char					**set_argv(t_exec *temp, int i);
+void set_argv(t_executor **node, t_exec *temp, int i);
+
 
 #endif
