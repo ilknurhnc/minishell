@@ -12,6 +12,7 @@ SRCS = 	minishell.c\
 		setting.c\
 		free.c\
 		exec.c\
+		redirect.c\
 		
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g #-lhistory -lncurses #-fsanitize=address

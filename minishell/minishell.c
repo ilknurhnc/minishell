@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:30 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/20 19:32:06 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/05/23 17:09:23 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ int	parsing(char *line, t_main *program)
 	return 0;
 }
 
-void print_exec_list(t_exec *cmd)
-{
-    while (cmd)
-    {
-        printf("NODE: content  =   %s, rank = %d, space = %d\n",
-               cmd->content ? cmd->content : "(null)",
-               cmd->rank, cmd->space);
-        cmd = cmd->next;
-    }
-}
+// void print_exec_list(t_exec *cmd)
+// {
+//     while (cmd)
+//     {
+//         printf("NODE: content  =   %s, rank = %d, space = %d\n",
+//                cmd->content ? cmd->content : "(null)",
+//                cmd->rank, cmd->space);
+//         cmd = cmd->next;
+//     }
+// }
 
 int	main(int ac, char **av, char **env)
 {

@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:26:05 by hbayram           #+#    #+#             */
-/*   Updated: 2025/03/22 02:38:28 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/05/23 17:27:08 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,62 @@ void free_exec(t_main *program)
 	program->token = NULL;
 }
 
+void	free_executer(t_main *program)
+{
+	int i = 0;
+
+	if (!program->executer)
+		return;
+	while (program->executer[i])
+	{	
+		if (program->executer[i]->argv)
+		{
+			int j = 0;
+			while (program->executer[i]->argv[j] != NULL)
+			{
+				free(program->executer[i]->argv[j]);
+				program->executer[i]->argv[j] = NULL;
+				j++;
+			}
+			free(program->executer[i]->argv);
+			program->executer[i]->argv = NULL;
+		}
+		if (program->executer[i]->infile)
+		{
+			free(program->executer[i]->infile);
+			program->executer[i]->infile = NULL;
+		}
+		if (program->executer[i]->outfile)
+		{
+			free(program->executer[i]->outfile);
+			program->executer[i]->outfile = NULL;
+		}
+		if (program->executer[i]->append)
+		{
+			free(program->executer[i]->append);
+			program->executer[i]->append = NULL;
+		}
+
+		if (program->executer[i]->heredoc_delimiters)
+		{
+			int k = 0;
+			while (program->executer[i]->heredoc_delimiters[k] != NULL)
+			{
+				free(program->executer[i]->heredoc_delimiters[k]);
+				program->executer[i]->heredoc_delimiters[k] = NULL;
+				k++;
+			}
+			free(program->executer[i]->heredoc_delimiters);
+			program->executer[i]->heredoc_delimiters = NULL;
+		}
+		free(program->executer[i]);
+		program->executer[i] = NULL;
+		i++;
+	}
+	free(program->executer);
+	program->executer = NULL;
+}
+
 void	free_program(t_main *program)
 {
 	t_token	*node;
@@ -74,6 +130,7 @@ void	free_program(t_main *program)
 	program->token = NULL;
 	free_env(program);
 	free_exec(program);
+	free_executer(program);
 }
 
 void	main_free(t_main program, char *line, int key)
