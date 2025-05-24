@@ -60,6 +60,7 @@ typedef struct s_executor
 	char				*heredoc_file;
 	char				**heredoc_delimiters;
 	char *append;
+	char *error;
 	int pipe;
 	struct s_executor *next;
 	t_main *program;
@@ -144,6 +145,7 @@ void main_free(t_main program, char *line, int key);
 void ft_builtin(t_main *program);
 void setting_str(t_main *program);
 void setting_sign(t_main *program);
+void	free_executer(t_main *program);
 
 // exec
 
@@ -154,7 +156,7 @@ t_exec *set_argv(t_executor **node, t_exec *start, int i);
 //redirect
 void	set_heredoc(t_exec *current, t_executor *cmd, int i);
 char	*is_directory(const char *path, char *error);
-void	check_redirect_access_input(const char *filename, char *error);
+void	check_redirect_access_input(const char *filename, t_executor *cmd);
 int	check_redirect_access(const char *filename, int rank, char *error);
 void	check_redirect_file(t_executor *cmd, char *filename, int rank);
 void	set_redirect(t_exec *current, t_executor *cmd);

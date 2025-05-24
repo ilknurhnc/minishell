@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/24 15:58:07 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/05/24 19:28:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void run_execve(t_executor *node, int input_fd, int output_fd)
         dup2(output_fd, STDOUT_FILENO);
         close(output_fd);
     }
-
     // Komutun tam yolunu bul
     cmd_path = find_command_path(node->argv[0]);
     if (!cmd_path)
@@ -189,7 +188,6 @@ void main_execute(t_executor *exec)
         }
         if (pid == 0) // Child process
         {
-            redirect_handle(current);
             if (current->next)
                 close(pipefds[0]); // Bu child, pipe'ın sadece yazma ucunu kullanır
             run_execve(current, prev_fd, output_fd);
@@ -256,6 +254,7 @@ void	prep_exec(t_main *program)
 		node[count]->append = NULL;
 		node[count]->pipe = program->exec->pipe;
         node[count]->program = program;
+        node[count]->error = NULL;
         current = set_argv(node, current, count);
 		if (count > 0)
 		    node[count - 1]->next = node[count];
