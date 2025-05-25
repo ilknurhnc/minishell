@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/24 19:28:36 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/05/25 20:10:47 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void pipe_count(t_exec *node)
 
 t_exec *set_argv(t_executor **node, t_exec *start, int i)
 {
-    //printf("set_argv çağrıldı, i=%d, start rank=%d, content='%s'\n", i, start->rank, start->content ? start->content : "NULL");
     t_exec *current = start;
     int j;
     int h_count;
@@ -67,15 +66,6 @@ t_exec *set_argv(t_executor **node, t_exec *start, int i)
         current = current->next;
     }
     node[i]->argv[j] = NULL;
-    if (j == 0)
-        printf("WARNING: argv boş kaldi. i = %d\n", i);
-    else
-    {
-        printf("Node[%d] argv: ", i);
-        for (int x = 0; x < j; x++)
-            printf("%s ", node[i]->argv[x]);
-        printf("\n");
-    }
     return current;
 }
 
@@ -145,7 +135,7 @@ void run_execve(t_executor *node, int input_fd, int output_fd)
     cmd_path = find_command_path(node->argv[0]);
     if (!cmd_path)
     {
-        perror("Komut bulunamadi");
+        printf("%s: command not found\n", node->argv[0]);
         exit(127);
     }
     execve(cmd_path, node->argv, node->program->env_str);
@@ -163,10 +153,11 @@ void main_execute(t_executor *exec)
 
     current = exec;
     prev_fd = STDIN_FILENO;
+
     while (current)
     {
-        redirect_handle(current);
         int output_fd = STDOUT_FILENO;
+
         if (current->next)
         {
             if (pipe(pipefds) == -1)
@@ -174,12 +165,8 @@ void main_execute(t_executor *exec)
                 perror("pipe failed");
                 exit(1);
             }
-            output_fd = pipefds[1]; // stdout bu pipe'a yazılacak
+            output_fd = pipefds[1]; // stdout pipe yazma ucuna yönlendirilecek
         }
-        printf("Child process: executing command: ");
-        for (int k = 0; current->argv[k]; k++)
-            printf("%s ", current->argv[k]);
-        printf("\n");
         pid = fork();
         if (pid == -1)
         {
@@ -189,25 +176,102 @@ void main_execute(t_executor *exec)
         if (pid == 0) // Child process
         {
             if (current->next)
-                close(pipefds[0]); // Bu child, pipe'ın sadece yazma ucunu kullanır
+                close(pipefds[0]); // sadece yazma ucunu kullanacak
+
+            // Redirectleri uygula, hata olursa current->error set edilir
+            redirect_handle(current);
+
+            // Hata varsa, ekrana yazdırıp child'i exit et
+            if (current->error)
+            {
+                fprintf(stderr, "minishell: %s\n", current->error);
+                exit(1);
+            }
+            // redirect ve hata yoksa exec çağrısı
             run_execve(current, prev_fd, output_fd);
+            // Eğer exec başarısız olursa (örn: komut bulunamadı)
+            perror("minishell: execve failed");
+            exit(127);
         }
         else // Parent process
         {
             if (prev_fd != STDIN_FILENO)
-                close(prev_fd); // Önceki pipe'dan gelen okuma ucunu kapat
+                close(prev_fd); // önceki pipe'ın okuma ucunu kapat
+
             if (current->next)
-                close(pipefds[1]); // Bu parent, pipe'ın yazma ucunu kapatır
+                close(pipefds[1]); // yazma ucunu kapat
+
             if (current->next)
-                prev_fd = pipefds[0]; // Pipe'ın okuma ucunu kaydet
+                prev_fd = pipefds[0]; // okuma ucunu kaydet
             else
-                prev_fd = STDIN_FILENO; // Artık gerek yok, stdin gibi davran
+                prev_fd = STDIN_FILENO;
+
             current = current->next;
         }
     }
+
+    // Tüm çocukları bekle
     while (wait(NULL) > 0)
         ;
 }
+
+
+// void main_execute(t_executor *exec)
+// {
+//     int pipefds[2];
+//     pid_t pid;
+//     int prev_fd;
+//     t_executor *current;
+
+//     current = exec;
+//     prev_fd = STDIN_FILENO;
+//     while (current)
+//     {
+//         int output_fd = STDOUT_FILENO;
+//         if (current->next)
+//         {
+//             if (pipe(pipefds) == -1)
+//             {
+//                 perror("pipe failed");
+//                 exit(1);
+//             }
+//             output_fd = pipefds[1]; // stdout bu pipe'a yazılacak
+//         }
+//         printf("Child process: executing command: ");
+//         for (int k = 0; current->argv[k]; k++)
+//             printf("%s ", current->argv[k]);
+//         printf("\n");
+//         pid = fork();
+//         if (pid == -1)
+//         {
+//             perror("fork failed");
+//             exit(1);
+//         }
+//         if (pid == 0) // Child process
+//         {
+//             if (current->next)
+//                 close(pipefds[0]); // Bu child, pipe'ın sadece yazma ucunu kullanır
+
+//             // Önce redirectleri uygula
+//             redirect_handle(current);
+//             run_execve(current, prev_fd, output_fd);
+//         }
+//         else // Parent process
+//         {
+//             if (prev_fd != STDIN_FILENO)
+//                 close(prev_fd); // Önceki pipe'dan gelen okuma ucunu kapat
+//             if (current->next)
+//                 close(pipefds[1]); // Bu parent, pipe'ın yazma ucunu kapatır
+//             if (current->next)
+//                 prev_fd = pipefds[0]; // Pipe'ın okuma ucunu kaydet
+//             else
+//                 prev_fd = STDIN_FILENO; // Artık gerek yok, stdin gibi davran
+//             current = current->next;
+//         }
+//     }
+//     while (wait(NULL) > 0)
+//         ;
+// }
 
 void print_exec_list(t_exec *head)
 {
@@ -247,6 +311,7 @@ void	prep_exec(t_main *program)
 			while (--count >= 0)
 				free(node[count]);
 			free(node);
+            return ;
 		}
 		node[count]->infile = NULL;
 		node[count]->outfile = NULL;
@@ -263,6 +328,6 @@ void	prep_exec(t_main *program)
 	}
     node[count] = NULL;
     program->executer = node;
-	//print_exec_list(program->exec->next);
+    program->control = 1;
     main_execute(node[0]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/22 13:19:26 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:44:09 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	token_init(t_main *program)
 	program->token->dollar = 0;
 	program->token->flag = 0;
 	program->token->tick = 0;
+	program->token->space = 0;
 	program->token->next = NULL;
 }
 
@@ -52,6 +53,7 @@ void exec_init(t_main *program)
 
 void	ft_init(t_main *program, char **env)
 {
+	program->control = 0;
 	token_init(program);
 	env_init(program, env);
 	exec_init(program);

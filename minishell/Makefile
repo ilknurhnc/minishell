@@ -23,6 +23,9 @@ all: ${NAME}
 ${NAME}: ${OBJS}
 	@${CC} ${CFLAGS} ${OBJS} -o ${NAME} -lreadline
 
+leak:
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
+
 clean: 
 	@${RM} ${OBJS}
 

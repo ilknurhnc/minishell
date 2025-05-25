@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 13:14:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/03/07 14:38:33 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:29:18 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,26 @@ char	*empty_quotes(char *line)
 	return (line);
 }
 
+static char	*find_helper(char *line, int *ptr_i, int *ptr_j)
+{
+	int		i;
+	int		j;
+	char *content;
+
+	i = *ptr_i;
+	j = *ptr_j;
+	content = ft_substr(line, i, j - i);
+	if (j - i > 0)
+	{
+		i = j;
+		if (line[i] && line[i] != '\0')
+			i++;
+	}
+	*ptr_i = i;
+	*ptr_j = j;
+	return (content);
+}
+
 int	find_quotes(char *line, int *ptr_i, int *ptr_j)
 {
 	int		i;
@@ -86,7 +106,7 @@ static void	token_flags(char *line, t_token *new_token, int quote)
 	new_token->flag = quote;
 	if (*line == 32 || (*line >= 9 && *line <= 13))
 		new_token->space = 1;
-	else if ((*(line + 1) == 32 || (*(line + 1) >= 9 && *(line + 1) <= 13))
+	else if (*(line) && *(line + 1) && (*(line + 1) == 32 || (*(line + 1) >= 9 && *(line + 1) <= 13))
 		&& (quote == 34 || quote == 39))
 		new_token->space = 1;
 }
@@ -110,8 +130,7 @@ void	tokenize_args(char *line, t_token **token)
 		quote = find_quotes(line, &i, &j);
 		if (j - i > 0)
 		{
-			new_token = ft_lstnew(ft_substr(line, i, j - i));
-			i = j + 1;
+			new_token = ft_lstnew(find_helper(line, &i, &j));
 			ft_lstadd_back(token, new_token);
 			token_flags(line + j, new_token, quote);
 		}

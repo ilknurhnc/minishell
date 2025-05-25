@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/20 14:21:23 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:16:05 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,11 @@ void setting_sign(t_main *program)
 	while (node && node->tick == 1)
 		node = node->next;
 	add = ft_strjoin(ft_strdup(""), ft_strdup(""));
-	
 	while(node && node->rank == 4 && (node->space == 0 || new_flag == 1))
 	{
 		new_flag = 0;
 		str = ft_strjoin(ft_strdup(add), ft_strdup(node->content));
 		free(add);
-
 		if(node->next && node->space == 1 && node->next->rank == 4)
 			add = ft_strjoin(ft_strdup(str), ft_strdup(" "));
 		else
@@ -95,13 +93,11 @@ void setting_sign(t_main *program)
 		new_node = ft_lstnew_exec(ft_strdup(node->content));
 		new_node->rank = node->rank;
         new_node->space = node->space;
-		
 		ft_execadd_back(&program->exec, new_node);
 		node->tick = 1;
 		node = node->next;
 	}
 	free(add);
-	
 	if(node != NULL)
 		setting_sign(program);
 }
