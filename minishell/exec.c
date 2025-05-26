@@ -3,14 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 20:10:47 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/05/26 14:10:06 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void handle_heredoc(t_executor *cmd)
+{
+	int pipefd[2];
+	char *line;
+	char *delimiter;
+
+	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
+		return;
+
+	delimiter = cmd->heredoc_delimiters[0];
+
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		exit(1);
+	}
+
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line || strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break;
+		}
+		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], "\n", 1);
+		free(line);
+	}
+	close(pipefd[1]);
+	cmd->heredoc_file = pipefd[0]; // child process buradan okuyacak
+}
+
 
 void pipe_count(t_exec *node)
 {
@@ -117,6 +151,7 @@ char *find_command_path(char *command)
     return NULL;
 }
 
+
 void run_execve(t_executor *node, int input_fd, int output_fd)
 {
     char *cmd_path;
@@ -144,6 +179,7 @@ void run_execve(t_executor *node, int input_fd, int output_fd)
     exit(1);
 }
 
+
 void main_execute(t_executor *exec)
 {
     int pipefds[2];
@@ -158,6 +194,10 @@ void main_execute(t_executor *exec)
     {
         int output_fd = STDOUT_FILENO;
 
+        // 🔸 HEREDOC HANDLE BURAYA EKLENDİ
+        if (current->heredoc_delimiters && current->heredoc_delimiters[0])
+            handle_heredoc(current);  // pipe oluşturup yazıyor
+
         if (current->next)
         {
             if (pipe(pipefds) == -1)
@@ -165,44 +205,61 @@ void main_execute(t_executor *exec)
                 perror("pipe failed");
                 exit(1);
             }
-            output_fd = pipefds[1]; // stdout pipe yazma ucuna yönlendirilecek
+            output_fd = pipefds[1];
         }
+
         pid = fork();
         if (pid == -1)
         {
             perror("fork failed");
             exit(1);
         }
-        if (pid == 0) // Child process
+
+        if (pid == 0) // 🔸 CHILD PROCESS
         {
             if (current->next)
-                close(pipefds[0]); // sadece yazma ucunu kullanacak
+                close(pipefds[0]);
 
-            // Redirectleri uygula, hata olursa current->error set edilir
+            // 🔸 HEREDOC stdin'e redirect
+            if (current->heredoc_file != -1)
+            {
+                dup2(current->heredoc_file, STDIN_FILENO);
+                close(current->heredoc_file);
+            }
+            else if (prev_fd != STDIN_FILENO)
+            {
+                dup2(prev_fd, STDIN_FILENO);
+                close(prev_fd);
+            }
+
+            if (output_fd != STDOUT_FILENO)
+            {
+                dup2(output_fd, STDOUT_FILENO);
+                close(output_fd);
+            }
+
             redirect_handle(current);
-
-            // Hata varsa, ekrana yazdırıp child'i exit et
             if (current->error)
             {
                 fprintf(stderr, "minishell: %s\n", current->error);
                 exit(1);
             }
-            // redirect ve hata yoksa exec çağrısı
-            run_execve(current, prev_fd, output_fd);
-            // Eğer exec başarısız olursa (örn: komut bulunamadı)
-            perror("minishell: execve failed");
-            exit(127);
+
+            run_execve(current, STDIN_FILENO, STDOUT_FILENO);
         }
-        else // Parent process
+        else // 🔸 PARENT
         {
             if (prev_fd != STDIN_FILENO)
-                close(prev_fd); // önceki pipe'ın okuma ucunu kapat
+                close(prev_fd);
+
+            if (current->heredoc_file != -1)
+                close(current->heredoc_file); // child zaten kullandı
 
             if (current->next)
-                close(pipefds[1]); // yazma ucunu kapat
+                close(pipefds[1]);
 
             if (current->next)
-                prev_fd = pipefds[0]; // okuma ucunu kaydet
+                prev_fd = pipefds[0];
             else
                 prev_fd = STDIN_FILENO;
 
@@ -210,68 +267,10 @@ void main_execute(t_executor *exec)
         }
     }
 
-    // Tüm çocukları bekle
     while (wait(NULL) > 0)
         ;
 }
 
-
-// void main_execute(t_executor *exec)
-// {
-//     int pipefds[2];
-//     pid_t pid;
-//     int prev_fd;
-//     t_executor *current;
-
-//     current = exec;
-//     prev_fd = STDIN_FILENO;
-//     while (current)
-//     {
-//         int output_fd = STDOUT_FILENO;
-//         if (current->next)
-//         {
-//             if (pipe(pipefds) == -1)
-//             {
-//                 perror("pipe failed");
-//                 exit(1);
-//             }
-//             output_fd = pipefds[1]; // stdout bu pipe'a yazılacak
-//         }
-//         printf("Child process: executing command: ");
-//         for (int k = 0; current->argv[k]; k++)
-//             printf("%s ", current->argv[k]);
-//         printf("\n");
-//         pid = fork();
-//         if (pid == -1)
-//         {
-//             perror("fork failed");
-//             exit(1);
-//         }
-//         if (pid == 0) // Child process
-//         {
-//             if (current->next)
-//                 close(pipefds[0]); // Bu child, pipe'ın sadece yazma ucunu kullanır
-
-//             // Önce redirectleri uygula
-//             redirect_handle(current);
-//             run_execve(current, prev_fd, output_fd);
-//         }
-//         else // Parent process
-//         {
-//             if (prev_fd != STDIN_FILENO)
-//                 close(prev_fd); // Önceki pipe'dan gelen okuma ucunu kapat
-//             if (current->next)
-//                 close(pipefds[1]); // Bu parent, pipe'ın yazma ucunu kapatır
-//             if (current->next)
-//                 prev_fd = pipefds[0]; // Pipe'ın okuma ucunu kaydet
-//             else
-//                 prev_fd = STDIN_FILENO; // Artık gerek yok, stdin gibi davran
-//             current = current->next;
-//         }
-//     }
-//     while (wait(NULL) > 0)
-//         ;
-// }
 
 void print_exec_list(t_exec *head)
 {
@@ -315,9 +314,10 @@ void	prep_exec(t_main *program)
 		}
 		node[count]->infile = NULL;
 		node[count]->outfile = NULL;
-		node[count]->heredoc_file = NULL;
+		node[count]->heredoc_file = -1;
 		node[count]->append = NULL;
 		node[count]->pipe = program->exec->pipe;
+        node[count]->heredoc_delimiters = NULL;
         node[count]->program = program;
         node[count]->error = NULL;
         current = set_argv(node, current, count);

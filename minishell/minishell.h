@@ -58,7 +58,7 @@ typedef struct s_executor
 	char **argv;
 	char *outfile;
 	char *infile;
-	char				*heredoc_file;
+	int				heredoc_file;
 	char				**heredoc_delimiters;
 	char *append;
 	char *error;
@@ -150,8 +150,8 @@ void	free_executer(t_main *program);
 
 // exec
 
-void pipe_count(t_exec *node);
 void prep_exec(t_main *program);
+void pipe_count(t_exec *node);
 t_exec *set_argv(t_executor **node, t_exec *start, int i);
 
 //redirect
