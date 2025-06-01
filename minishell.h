@@ -163,5 +163,8 @@ void	check_redirect_file(t_executor *cmd, char *filename, int rank);
 void	set_redirect(t_exec *current, t_executor *cmd);
 void	redirect_handle(t_executor *node);
 
+//builtin
+int is_builtin_command(char *cmd);
+int execute_builtin(t_executor *cmd);
 
 #endif
