@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bilmiyorum.c                                       :+:      :+:    :+:   */
+/*   seperate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:24:37 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 18:18:16 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 19:49:59 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	separate_two(t_token *token, char *content, int len, int location)
 {

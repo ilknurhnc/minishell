@@ -141,6 +141,8 @@ void get_env(t_env **envp, char **env);
 void print_env_array(t_main *program);
 void	fill_array(t_main *program, int i);
 int	ft_lstsize_env(t_env *env);
+void	update_or_add_env(t_main *prog, char *key, char *value);
+char	*get_env_value(t_env *env, char *key);
 
 // free
 void free_program(t_main *program, int key);
@@ -174,5 +176,7 @@ int is_builtin_command(char *cmd);
 int execute_builtin(t_executor *cmd);
 void	env_init(t_main *program, char **env);
 int	ft_export(t_executor *node);
+int	ft_unset(t_executor *node);
+int	ft_cd(t_executor *node);
 
 #endif

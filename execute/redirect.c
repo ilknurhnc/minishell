@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:18:43 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 11:32:54 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 19:50:18 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void set_heredoc(t_exec *current, t_executor *cmd, int i)
 {

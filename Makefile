@@ -1,20 +1,22 @@
 NAME = minishell
 
-SRCS = 	minishell.c\
-		utils.c\
-		signals.c\
-		quotes.c\
-		init.c\
-		dollar.c\
-		control.c\
-		seperate.c\
-		env.c\
-		setting.c\
+SRCS = 	minishell.c \
+		utils.c \
+		signals.c \
+		parse/quotes.c \
+		parse/dollar.c \
+		parse/control.c \
+		parse/seperate.c \
+		parse/setting.c \
+		builtin/builtin.c \
+		builtin/env.c \
+		builtin/export.c \
+		builtin/unset.c \
+		builtin/cd.c \
+		execute/exec.c \
+		execute/redirect.c \
 		free.c\
-		exec.c\
-		redirect.c\
-		builtin.c\
-		export.c\
+		init.c\
 		
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g #-lhistory -lncurses #-fsanitize=address

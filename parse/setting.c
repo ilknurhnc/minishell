@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   setting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 19:16:05 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 19:50:04 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void setting_str(t_main *program)
 {

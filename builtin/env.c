@@ -6,11 +6,11 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 18:35:33 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 19:50:29 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	ft_lstsize_env(t_env *env)
 {

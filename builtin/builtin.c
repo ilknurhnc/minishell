@@ -6,11 +6,11 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/02 18:28:06 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 21:56:53 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_builtin_command(char *cmd)
 {
@@ -43,7 +43,7 @@ int	ft_echo(t_executor *node)
 		return (1);
 	i = 1;
 	newline = 1;
-	printf("[MINISHELL ECHO]: ");
+	//printf("[MINISHELL ECHO]: ");
 	while (node->argv[i] && is_valid_n_flag(node->argv[i]))
 	{
 		newline = 0;
@@ -61,20 +61,36 @@ int	ft_echo(t_executor *node)
 	return (0);
 }
 
+// int	ft_pwd(t_executor *node)
+// {
+// 	char	*cwd;
+
+// 	cwd = getcwd(NULL, 0);
+// 	if (!cwd)
+// 	{
+// 		perror("minishell: pwd");
+// 		node->error = "Failed to get current directory";
+// 		return (1);
+// 	}
+// 	printf("[MINISHELL PWD]:");
+// 	printf("%s\n", cwd);
+// 	free(cwd);
+// 	node->error = NULL;
+// 	return (0);
+// }
+
 int	ft_pwd(t_executor *node)
 {
-	char	*cwd;
+	char	*pwd;
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
+	pwd = get_env_value(node->program->env, "PWD");
+	if (!pwd)
 	{
 		perror("minishell: pwd");
-		node->error = "Failed to get current directory";
+		node->error = "PWD not set";
 		return (1);
 	}
-	printf("[MINISHELL PWD]:");
-	printf("%s\n", cwd);
-	free(cwd);
+	printf("[MINISHELL PWD]:%s\n", pwd);
 	node->error = NULL;
 	return (0);
 }
@@ -100,14 +116,14 @@ int	execute_builtin(t_executor *cmd)
 {
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (ft_echo(cmd));
-	// else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-	//     return (ft_cd(cmd));
+	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
+	    return (ft_cd(cmd));
 	else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		return (ft_pwd(cmd));
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		return (ft_export(cmd));
-	// else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-	//     return (ft_unset(cmd));
+	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
+	    return (ft_unset(cmd));
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (ft_env(cmd));
 	// else if (ft_strcmp(cmd->argv[0], "exit") == 0)

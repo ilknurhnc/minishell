@@ -6,11 +6,11 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/02 18:29:36 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 19:50:34 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_valid_identifier(char *str)
 {
