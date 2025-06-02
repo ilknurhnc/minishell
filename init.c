@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 11:45:18 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 13:25:17 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,16 @@ void	token_init(t_main *program)
 	program->token->tick = 0;
 	program->token->space = 0;
 	program->token->next = NULL;
+	program->token->program = program;
 }
 
-void	env_init(t_main *program, char **env)
+void env_init(t_main *program, char **env)
 {
-	t_env envp;
+    t_env *envp = NULL;
 
-	program->env = &envp;
-	get_env(&program->env, env);
-	set_env(program, program->env);
+    get_env(&envp, env);
+    program->env = envp;
+    set_env(program, program->env);
 }
 
 void exec_init(t_main *program)

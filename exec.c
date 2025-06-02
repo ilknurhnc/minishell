@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 11:39:56 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 12:40:12 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,38 +120,71 @@ char *join_path(const char *dir, const char *cmd)
     return full_path;
 }
 
-char *find_command_path(char *command)
+char *get_path_from_env(t_env *env)
 {
-    char *path_env = getenv("PATH");
-    char *path_copy;
-    char *dir;
-    char *full_path;
+    while (env)
+    {
+        if (ft_strcmp(env->before_eq, "PATH") == 0)
+        {
+            if (env->after_eq && ft_strlen(env->after_eq) > 0)
+                return env->after_eq;
+            else
+                return NULL; // PATH var ama boş
+        }
+        env = env->next;
+    }
+    return NULL; // PATH yok
+}
 
+char *get_next_path_dir(char *path_str, int *start_pos)
+{
+    int i = *start_pos;
+    int start;
+    int len;
+
+    if (!path_str || path_str[i] == '\0')
+        return NULL;
+
+    start = i;
+    while (path_str[i] != ':' && path_str[i] != '\0')
+        i++;
+
+    len = i - start;
+    char *token = malloc(len + 1);
+    if (!token)
+        return NULL;
+    strncpy(token, &path_str[start], len);
+    token[len] = '\0';
+
+    if (path_str[i] == ':')
+        *start_pos = i + 1;  // sonraki aramaya hazırla
+    else
+        *start_pos = i;      // son token
+
+    return token;
+}
+
+
+char *find_command_path(t_main *program, char *command)
+{
+    char *path_env = get_path_from_env(program->env);
     if (!path_env)
         return NULL;
 
-    path_copy = strdup(path_env);
-    if (!path_copy)
-        return NULL;
-
-    dir = strtok(path_copy, ":");
-    while (dir)
+    int pos = 0;
+    char *dir;
+    char *full_path;
+    
+    while ((dir = get_next_path_dir(path_env, &pos)) != NULL)
     {
         full_path = join_path(dir, command);
+        free(dir);
         if (!full_path)
-        {
-            free(path_copy);
             return NULL;
-        }
-        if (access(full_path, X_OK) == 0) // çalıştırılabilir mi?
-        {
-            free(path_copy);
+        if (access(full_path, X_OK) == 0)
             return full_path;
-        }
         free(full_path);
-        dir = strtok(NULL, ":");
     }
-    free(path_copy);
     return NULL;
 }
 
@@ -170,7 +203,7 @@ void run_execve(t_executor *node, int input_fd, int output_fd)
         dup2(output_fd, STDOUT_FILENO);
         close(output_fd);
     }
-    cmd_path = find_command_path(node->argv[0]);
+    cmd_path = find_command_path(node->program, node->argv[0]);
     if (!cmd_path)
     {
         printf("%s: command not found\n", node->argv[0]);

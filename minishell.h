@@ -123,8 +123,8 @@ void ft_init(t_main *program);
 
 // dollar
 void dollar_control(t_token *token);
-char *find_dollar(char *content, int index);
-char *dollar_handle(char *dollar);
+char *find_dollar(char *content, int index, t_main *program);
+char *dollar_handle(char *dollar, t_env *env);
 
 // control
 int pipe_control(t_token *token);
