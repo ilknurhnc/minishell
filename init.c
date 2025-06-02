@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 13:25:17 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 13:29:21 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void exec_init(t_main *program)
 	program->exec->content = NULL;
 	program->exec->next = NULL;
 	program->exec->rank = 4;
+	program->exec->program = program;
 }
 
 void	ft_init(t_main *program)

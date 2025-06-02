@@ -95,6 +95,7 @@ char *my_join(char *line, char *s1, char *s2);
 size_t ft_strlcpy(char *dest, char *src, size_t destsize);
 char *ft_strdup(char *s1);
 int ft_isalnum(int c);
+int	ft_isalpha(int c);
 int ft_strcmp(char *s1, char *s2);
 int ft_strstr(char *str, char *to_find);
 void ft_lstadd(t_token *node, t_token *new);
@@ -138,6 +139,8 @@ void print_token(t_token *list);
 void set_env(t_main *program, t_env *env);
 void get_env(t_env **envp, char **env);
 void print_env_array(t_main *program);
+void	fill_array(t_main *program, int i);
+int	ft_lstsize_env(t_env *env);
 
 // free
 void free_program(t_main *program, int key);
