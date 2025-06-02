@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bilmiyorum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:24:37 by hbayram           #+#    #+#             */
-/*   Updated: 2025/03/23 15:23:53 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 18:18:16 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	new_func(t_token *temp)
 		else
 			arrange_tokens(temp, "<", 1);
 	}
-	if (temp->content != NULL && ft_strchr(temp->content, '|'))  
+	if (temp->content != NULL && ft_strchr(temp->content, '|'))
 		arrange_tokens(temp, "|", 1);
 }
 

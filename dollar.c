@@ -89,10 +89,9 @@ void	dollar_control(t_token *token)
 			after_dollar = find_dollar(token->content, index, head->program);
 			free(token->content);
 			token->content = ft_strjoin(before_dollar, after_dollar);
-			index = ft_our_strchr(&token->content[index], 36);
-			if (index <= 0)
+			if (ft_our_strchr(&token->content[index], 36) <= 0)
 				break ;
-			index = index + new;
+			index = ft_our_strchr(&token->content[index], 36) + new;
 		}
 		token = token->next;
 	}

@@ -6,11 +6,24 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 16:57:17 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 18:35:33 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_lstsize_env(t_env *env)
+{
+	int	count;
+
+	count = 0;
+	while (env)
+	{
+		count++;
+		env = env->next;
+	}
+	return (count);
+}
 
 void	get_env(t_env **envp, char **env)
 {
@@ -25,21 +38,9 @@ void	get_env(t_env **envp, char **env)
 		index = of_strchr(env[i], 61);
 		if (index == -1)
 			continue ;
-		new = a_lstnew(ft_substr(env[i], 0, index), ft_substr(env[i], index + 1, 
-			ft_strlen(env[i]) - index - 1));
+		new = a_lstnew(ft_substr(env[i], 0, index), ft_substr(env[i], index + 1,
+					ft_strlen(env[i]) - index - 1));
 		ft_envadd_back(envp, new);
-	}
-}
-
-void	print_env_array(t_main *program)
-{
-	int	i;
-
-	i = 0;
-	while (program->env_str[i])
-	{
-		printf("%s\n", program->env_str[i]);
-		i++;
 	}
 }
 
@@ -67,7 +68,7 @@ void	fill_array(t_main *program, int i)
 void	set_env(t_main *program, t_env *env)
 {
 	char	*str;
-	char	*idk;
+	char	*new;
 	int		i;
 	t_env	*temp;
 
@@ -75,12 +76,12 @@ void	set_env(t_main *program, t_env *env)
 	temp = env;
 	while (temp)
 	{
-		idk = ft_strdup(temp->before_eq);
-		str = ft_strjoin(idk, ft_strdup("="));
-		idk = ft_strdup(temp->after_eq);
-		temp->full_str = ft_strjoin(str, idk);
+		new = ft_strdup(temp->before_eq);
+		str = ft_strjoin(new, ft_strdup("="));
+		new = ft_strdup(temp->after_eq);
+		temp->full_str = ft_strjoin(str, new);
 		temp = temp->next;
-	}
+	} 
 	temp = env;
 	while (temp)
 	{
@@ -88,8 +89,4 @@ void	set_env(t_main *program, t_env *env)
 		temp = temp->next;
 	}
 	fill_array(program, i);
-	//print_env_array(program);
 }
-
-
-

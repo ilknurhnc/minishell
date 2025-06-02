@@ -173,4 +173,6 @@ void	redirect_handle(t_executor *node);
 int is_builtin_command(char *cmd);
 int execute_builtin(t_executor *cmd);
 void	env_init(t_main *program, char **env);
+int	ft_export(t_executor *node);
+
 #endif
