@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 19:44:09 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 11:45:18 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,10 @@ void exec_init(t_main *program)
 	program->exec->rank = 4;
 }
 
-void	ft_init(t_main *program, char **env)
+void	ft_init(t_main *program)
 {
 	program->control = 0;
 	token_init(program);
-	env_init(program, env);
 	exec_init(program);
 }
 

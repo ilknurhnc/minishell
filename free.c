@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:26:05 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 19:49:28 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 11:39:40 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,18 +95,23 @@ void free_executer(t_main *program)
             free(program->executer[i]->append);
             program->executer[i]->append = NULL;
         }
-        // if (program->executer[i]->heredoc_delimiters)
-        // {
-        //     int k = 0;
-        //     while (program->executer[i]->heredoc_delimiters[k])
-        //     {
-        //         free(program->executer[i]->heredoc_delimiters[k]);
-        //         program->executer[i]->heredoc_delimiters[k] = NULL;
-        //         k++;
-        //     }
-        //     free(program->executer[i]->heredoc_delimiters);
-        //     program->executer[i]->heredoc_delimiters = NULL;
-        // }
+		if(program->executer[i]->error)
+		{
+			free(program->executer[i]->error);
+			program->executer[i]->error = NULL;
+		}
+        if (program->executer[i]->heredoc_delimiters)
+        {
+            int k = 0;
+            while (program->executer[i]->heredoc_delimiters[k])
+            {
+                free(program->executer[i]->heredoc_delimiters[k]);
+                program->executer[i]->heredoc_delimiters[k] = NULL;
+                k++;
+            }
+            free(program->executer[i]->heredoc_delimiters);
+            program->executer[i]->heredoc_delimiters = NULL;
+        }
         free(program->executer[i]);
         program->executer[i] = NULL;
         i++;
@@ -115,6 +120,30 @@ void free_executer(t_main *program)
     program->executer = NULL;
 }
 
+void free_token(t_main *program)
+{
+	t_token *node;
+	t_token *temp;
+
+	if (!program || !program->token)
+		return;
+
+	node = program->token;
+	while (node)
+	{
+		temp = node;
+		node = node->next;
+
+		if (temp->content)
+		{
+			free(temp->content);
+			temp->content = NULL;
+		}
+		free(temp);
+		temp = NULL;
+	}
+	program->token = NULL;
+}
 
 
 void free_program(t_main *program, int key)
@@ -128,15 +157,15 @@ void free_program(t_main *program, int key)
 		temp = node;
 		node = node->next;
 		free(temp->content);
+		temp->content = NULL;
 		free(temp);
 	}
 	program->token = NULL;
-	free_env(program);
 	if(key != 2)
 		free_exec(program);
 	else
 		free(program->exec);
-	if (key == 0  && program->control == 1)
+	if (key == 0 && program->control == 1)
 		free_executer(program);
 }
 
@@ -144,7 +173,10 @@ void main_free(t_main program, char *line, int key)
 {
 	if (line)
 		free(line);
-	free_program(&program, key);
 	if (key == 1)
+	{
 		rl_clear_history();
+		free_env(&program);
+	}
+	free_program(&program, key);
 }

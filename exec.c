@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/27 13:00:18 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/02 11:39:56 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,12 @@ void handle_heredoc(t_executor *cmd)
 
 	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
 		return;
-
 	delimiter = cmd->heredoc_delimiters[0];
-
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
 		exit(1);
 	}
-
 	while (1)
 	{
 		line = readline("heredoc> ");
@@ -88,6 +85,13 @@ t_exec *set_argv(t_executor **node, t_exec *start, int i)
 		{
 			set_heredoc(current, node[i], h_count);
 			h_count++;
+            if (!node[i]->heredoc_delimiters)
+            {
+                node[i]->heredoc_delimiters = malloc(sizeof(char *) * 100);
+                if (!node[i]->heredoc_delimiters)
+                    return NULL;
+            }
+            node[i]->heredoc_delimiters[h_count] = NULL;
 			current = current->next->next;
 			continue ;
 		}
@@ -166,110 +170,20 @@ void run_execve(t_executor *node, int input_fd, int output_fd)
         dup2(output_fd, STDOUT_FILENO);
         close(output_fd);
     }
-    // Komutun tam yolunu bul
     cmd_path = find_command_path(node->argv[0]);
     if (!cmd_path)
     {
         printf("%s: command not found\n", node->argv[0]);
+        free_token(node->program);
+        free_exec(node->program);
+        free_executer(node->program);
         exit(127);
     }
     execve(cmd_path, node->argv, node->program->env_str);
     perror("execve failed");
-    free(cmd_path); // sadece execve başarısız olursa buraya gelir
+    free(cmd_path);
     exit(1);
 }
-
-
-// void main_execute(t_executor *exec)
-// {
-//     int pipefds[2];
-//     pid_t pid;
-//     int prev_fd;
-//     t_executor *current;
-
-//     current = exec;
-//     prev_fd = STDIN_FILENO;
-
-//     while (current)
-//     {
-//         int output_fd = STDOUT_FILENO;
-
-//         // 🔸 HEREDOC HANDLE BURAYA EKLENDİ
-//         if (current->heredoc_delimiters && current->heredoc_delimiters[0])
-//             handle_heredoc(current);  // pipe oluşturup yazıyor
-
-//         if (current->next)
-//         {
-//             if (pipe(pipefds) == -1)
-//             {
-//                 perror("pipe failed");
-//                 exit(1);
-//             }
-//             output_fd = pipefds[1];
-//         }
-
-//         pid = fork();
-//         if (pid == -1)
-//         {
-//             perror("fork failed");
-//             exit(1);
-//         }
-
-//         if (pid == 0) // 🔸 CHILD PROCESS
-//         {
-//             if (current->next)
-//                 close(pipefds[0]);
-
-//             // 🔸 HEREDOC stdin'e redirect
-//             if (current->heredoc_file != -1)
-//             {
-//                 dup2(current->heredoc_file, STDIN_FILENO);
-//                 close(current->heredoc_file);
-//             }
-//             else if (prev_fd != STDIN_FILENO)
-//             {
-//                 dup2(prev_fd, STDIN_FILENO);
-//                 close(prev_fd);
-//             }
-
-//             if (output_fd != STDOUT_FILENO)
-//             {
-//                 dup2(output_fd, STDOUT_FILENO);
-//                 close(output_fd);
-//             }
-
-//             redirect_handle(current);
-//             if (current->error)
-//             {
-//                 fprintf(stderr, "minishell: %s\n", current->error);
-//                 exit(1);
-//             }
-
-//             run_execve(current, STDIN_FILENO, STDOUT_FILENO);
-//         }
-//         else // 🔸 PARENT
-//         {
-//             if (prev_fd != STDIN_FILENO)
-//                 close(prev_fd);
-
-//             if (current->heredoc_file != -1)
-//                 close(current->heredoc_file); // child zaten kullandı
-
-//             if (current->next)
-//                 close(pipefds[1]);
-
-//             if (current->next)
-//                 prev_fd = pipefds[0];
-//             else
-//                 prev_fd = STDIN_FILENO;
-
-//             current = current->next;
-//         }
-//     }
-
-//     while (wait(NULL) > 0)
-//         ;
-// }
 
 void main_execute(t_executor *exec)
 {
@@ -424,7 +338,7 @@ void	prep_exec(t_main *program)
 		{
 			while (--count >= 0)
 				free(node[count]);
-			free(node);
+			free_executer(program);
             return ;
 		}
 		node[count]->infile = NULL;

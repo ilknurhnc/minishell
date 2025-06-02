@@ -119,7 +119,7 @@ void tokenize_args(char *line, t_token **token);
 
 // init
 void token_init(t_main *program);
-void ft_init(t_main *program, char **env);
+void ft_init(t_main *program);
 
 // dollar
 void dollar_control(t_token *token);
@@ -142,8 +142,11 @@ void print_env_array(t_main *program);
 // free
 void free_program(t_main *program, int key);
 void main_free(t_main program, char *line, int key);
+void free_env(t_main *program);
+void free_exec(t_main *program);
+void free_executer(t_main *program);
+void free_token(t_main *program);
 
-void ft_builtin(t_main *program);
 void setting_str(t_main *program);
 void setting_sign(t_main *program);
 void	free_executer(t_main *program);
@@ -166,5 +169,5 @@ void	redirect_handle(t_executor *node);
 //builtin
 int is_builtin_command(char *cmd);
 int execute_builtin(t_executor *cmd);
-
+void	env_init(t_main *program, char **env);
 #endif

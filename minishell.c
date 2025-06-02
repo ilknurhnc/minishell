@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:30 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 18:55:42 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/02 11:45:48 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	print_token(t_token *list)
 		list = list->next;
 	}
 }
+
 void	print_exec(t_exec *exec)
 {
 	while (exec)
@@ -51,20 +52,8 @@ int	parsing(char *line, t_main *program)
 	{
 		return 1;
 	}
-	//print_token(program->token->next);
 	return 0;
 }
-
-// void print_exec_list(t_exec *cmd)
-// {
-//     while (cmd)
-//     {
-//         printf("NODE: content  =   %s, rank = %d, space = %d\n",
-//                cmd->content ? cmd->content : "(null)",
-//                cmd->rank, cmd->space);
-//         cmd = cmd->next;
-//     }
-// }
 
 int	main(int ac, char **av, char **env)
 {
@@ -75,9 +64,10 @@ int	main(int ac, char **av, char **env)
 	if (ac != 1)
 		exit(61);
 	signal_init();
+	env_init(&program, env);
 	while (1)
 	{
-		ft_init(&program, env);
+		ft_init(&program);
 		line = readline("minishell> ");
 		if (line == NULL) // Eğer Ctrl-D ile EOF alırsak,
 			//readline() NULL döndürecektir
@@ -99,7 +89,6 @@ int	main(int ac, char **av, char **env)
 		}
 		main_free(program, line, 0);
 	}
-
 	main_free(program, line, 1);
 	return (0);
 }
