@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 14:02:59 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 16:54:00 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void exec_init(t_main *program)
 void	ft_init(t_main *program)
 {
 	program->control = 0;
+	program->exit_status = 0;
 	token_init(program);
 	exec_init(program);
 }

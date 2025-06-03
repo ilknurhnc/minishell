@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/02 21:56:53 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/03 16:26:03 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,39 +61,24 @@ int	ft_echo(t_executor *node)
 	return (0);
 }
 
-// int	ft_pwd(t_executor *node)
-// {
-// 	char	*cwd;
-
-// 	cwd = getcwd(NULL, 0);
-// 	if (!cwd)
-// 	{
-// 		perror("minishell: pwd");
-// 		node->error = "Failed to get current directory";
-// 		return (1);
-// 	}
-// 	printf("[MINISHELL PWD]:");
-// 	printf("%s\n", cwd);
-// 	free(cwd);
-// 	node->error = NULL;
-// 	return (0);
-// }
-
 int	ft_pwd(t_executor *node)
 {
-	char	*pwd;
+	char	*cwd;
 
-	pwd = get_env_value(node->program->env, "PWD");
-	if (!pwd)
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
 	{
 		perror("minishell: pwd");
-		node->error = "PWD not set";
+		node->error = "Failed to get current directory";
 		return (1);
 	}
-	printf("[MINISHELL PWD]:%s\n", pwd);
+	printf("[MINISHELL PWD]:");
+	printf("%s\n", cwd);
+	free(cwd);
 	node->error = NULL;
 	return (0);
 }
+
 
 int	ft_env(t_executor *exec_node)
 {
@@ -126,7 +111,7 @@ int	execute_builtin(t_executor *cmd)
 	    return (ft_unset(cmd));
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (ft_env(cmd));
-	// else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-	//     return (ft_exit(cmd));
+	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
+	    return (ft_exit(cmd));
 	return (1);
 }

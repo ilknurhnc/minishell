@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:49:44 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/03 15:53:19 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 17:13:03 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,16 @@ char	*dollar_handle(char *dollar, t_env *env)
 
 	if (ft_strcmp(dollar, "0") == 0)
 	{
-		printf("aa\n");
 		new_dollar = "minishell";
 		new = ft_strdup(new_dollar);
 	}
 	else if (ft_strcmp(dollar, "?") == 0)
 	{
-		printf("s%d\n", env->program->executer[0]->exit_status);
-		printf("c%s\n", ft_itoa(env->program->executer[0]->exit_status));
-		new_dollar = ft_itoa(env->program->executer[0]->exit_status);
+		new_dollar = ft_itoa(env->program->exit_status);
 		new = ft_strdup(new_dollar);
 	}
 	else
 	{
-		printf("bb\n");
 		new_dollar = get_value_from_env(env, dollar);
 		if (new_dollar == NULL)
 		{
@@ -70,10 +66,10 @@ char	*find_dollar(char *content, int index, t_main *program)
 	int		i;
 
 	i = index + 1;
-	if (isdigit(content[i]))
+	if (content[i] == '?' || isdigit(content[i]))
 		i++;
 	else
-		while (ft_isalnum(content[i]) == 1)
+		while (ft_isalnum(content[i]) == 1 || content[i] == '_')
 			i++;
 	dollar = ft_substr(content, index + 1, i - index - 1);
 	new = ft_strdup(dollar);

@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:27 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 14:01:19 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 17:15:48 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int	ft_our_strchr( char *s, int c)
 	c = (char)c;
 	while (s[i] != '\0')
 	{
-		if (s[i] == c && ft_isalnum(s[i + 1]))
+		if (s[i] == c && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
 			return (i);
 		i++;
 	}
@@ -467,7 +467,7 @@ int	ft_atoi(const char *str)
 	return (sign * result);
 }
 
-static int	cal_digit_num(long n)
+static int	bas_num(long n)
 {
 	int	digit_num;
 
@@ -487,29 +487,29 @@ static int	cal_digit_num(long n)
 	return (digit_num);
 }
 
-char	*ft_itoa(int num)
+char	*ft_itoa(int n)
 {
 	int		digit_num;
-	char	*res;
-	long	n;
+	char	*s;
+	long	num;
 
-	n = (long)num;
-	digit_num = cal_digit_num(num);
-	res = malloc((digit_num + 1) * sizeof(char));
-	if (res == NULL)
+	num = n;
+	digit_num = bas_num(n);
+	s = malloc((digit_num + 1) * sizeof(char));
+	if (s == NULL)
 		return (NULL);
-	res[digit_num] = '\0';
-	if (num == 0)
-		res[0] = '0';
-	else if (num < 0)
+	s[digit_num] = '\0';
+	if (n == 0)
+		s[0] = '0';
+	else if (n < 0)
 	{
-		res[0] = '-';
-		n = n * -1;
+		s[0] = '-';
+		num = num * -1;
 	}
-	while (n > 0)
+	while (num > 0)
 	{
-		res[--digit_num] = (n % 10) + '0';
-		n = n / 10;
+		s[--digit_num] = (num % 10) + '0';
+		num = num / 10;
 	}
-	return (res);
+	return (s);
 }

@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 13:50:01 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 17:25:28 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,8 +348,17 @@ void main_execute(t_executor *exec, int prev_fd)
             prev_fd = STDIN_FILENO;
         current = current->next;
     }
-    while (wait(NULL) > 0)
-        ;
+int status;
+pid_t pid;
+t_main *program = exec->program;  // current->program
+
+while ((pid = wait(&status)) > 0)
+{
+    if (WIFEXITED(status))
+        program->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        program->exit_status = 128 + WTERMSIG(status);
+}
 }
 
 void init_exec(t_main *program, t_executor **node, int count)

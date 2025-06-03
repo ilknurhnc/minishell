@@ -45,6 +45,7 @@ typedef struct s_env
 typedef struct s_main
 {
 	int control;
+	int exit_status;
 	char **env_str;
 	t_token *token;
 	t_env *env;
@@ -59,7 +60,6 @@ typedef struct s_executor
 	char *outfile;
 	char *infile;
 	int				heredoc_file;
-	int				exit_status;
 	char				**heredoc_delimiters;
 	char *append;
 	char *error;
@@ -181,5 +181,6 @@ void	env_init(t_main *program, char **env);
 int	ft_export(t_executor *node);
 int	ft_unset(t_executor *node);
 int	ft_cd(t_executor *node);
+int	ft_exit(t_executor *cmd);
 
 #endif

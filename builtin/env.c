@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 15:48:04 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 16:56:25 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	set_env(t_main *program, t_env *env)
 		str = ft_strjoin(new, ft_strdup("="));
 		new = ft_strdup(temp->after_eq);
 		temp->full_str = ft_strjoin(str, new);
+		temp->program = program;
 		temp = temp->next;
 	} 
 	temp = env;
