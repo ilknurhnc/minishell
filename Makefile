@@ -12,6 +12,7 @@ SRCS = 	minishell.c \
 		builtin/env.c \
 		builtin/export.c \
 		builtin/unset.c \
+		builtin/exit.c \
 		builtin/cd.c \
 		execute/exec.c \
 		execute/redirect.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:49:44 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/02 21:59:00 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/03 15:53:19 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,20 @@ char	*dollar_handle(char *dollar, t_env *env)
 
 	if (ft_strcmp(dollar, "0") == 0)
 	{
+		printf("aa\n");
 		new_dollar = "minishell";
+		new = ft_strdup(new_dollar);
+	}
+	else if (ft_strcmp(dollar, "?") == 0)
+	{
+		printf("s%d\n", env->program->executer[0]->exit_status);
+		printf("c%s\n", ft_itoa(env->program->executer[0]->exit_status));
+		new_dollar = ft_itoa(env->program->executer[0]->exit_status);
 		new = ft_strdup(new_dollar);
 	}
 	else
 	{
+		printf("bb\n");
 		new_dollar = get_value_from_env(env, dollar);
 		if (new_dollar == NULL)
 		{
@@ -56,8 +65,8 @@ char	*find_dollar(char *content, int index, t_main *program)
 {
 	char	*dollar;
 	char	*str;
-	char	*yeter;
-	char	*allahim;
+	char	*merge;
+	char	*new;
 	int		i;
 
 	i = index + 1;
@@ -67,17 +76,17 @@ char	*find_dollar(char *content, int index, t_main *program)
 		while (ft_isalnum(content[i]) == 1)
 			i++;
 	dollar = ft_substr(content, index + 1, i - index - 1);
-	allahim = ft_strdup(dollar);
+	new = ft_strdup(dollar);
 	free(dollar);
-	dollar = dollar_handle(allahim, program->env);
+	dollar = dollar_handle(new, program->env);
 	str = ft_strdup(&content[i]);
 	if (dollar == NULL)
 	{
 		free(dollar);
 		return (str);
 	}
-	yeter = ft_strjoin(dollar, str);
-	return (yeter);
+	merge = ft_strjoin(dollar, str);
+	return (merge);
 }
 
 void	dollar_control(t_token *token)

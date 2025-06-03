@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:27 by hbayram           #+#    #+#             */
-/*   Updated: 2025/05/25 19:15:29 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 14:01:19 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -440,4 +440,76 @@ int	space_control(char *s)
 		i++;
 	}
 	return (0);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	sign;
+	int	result;
+	int	i;
+
+	sign = 1;
+	result = 0;
+	i = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = sign * (-1);
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (sign * result);
+}
+
+static int	cal_digit_num(long n)
+{
+	int	digit_num;
+
+	digit_num = 0;
+	if (n < 0)
+	{
+		digit_num += 1;
+		n *= -1;
+	}
+	if (n == 0)
+		return (1);
+	while (n > 0)
+	{
+		n /= 10;
+		digit_num++;
+	}
+	return (digit_num);
+}
+
+char	*ft_itoa(int num)
+{
+	int		digit_num;
+	char	*res;
+	long	n;
+
+	n = (long)num;
+	digit_num = cal_digit_num(num);
+	res = malloc((digit_num + 1) * sizeof(char));
+	if (res == NULL)
+		return (NULL);
+	res[digit_num] = '\0';
+	if (num == 0)
+		res[0] = '0';
+	else if (num < 0)
+	{
+		res[0] = '-';
+		n = n * -1;
+	}
+	while (n > 0)
+	{
+		res[--digit_num] = (n % 10) + '0';
+		n = n / 10;
+	}
+	return (res);
 }

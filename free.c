@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:26:05 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 11:39:40 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/03 13:23:59 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ void free_token(t_main *program)
 	{
 		temp = node;
 		node = node->next;
-
 		if (temp->content)
 		{
 			free(temp->content);
@@ -145,22 +144,9 @@ void free_token(t_main *program)
 	program->token = NULL;
 }
 
-
 void free_program(t_main *program, int key)
 {
-	t_token *node;
-	t_token *temp;
-
-	node = program->token;
-	while (node)
-	{
-		temp = node;
-		node = node->next;
-		free(temp->content);
-		temp->content = NULL;
-		free(temp);
-	}
-	program->token = NULL;
+	free_token(program);
 	if(key != 2)
 		free_exec(program);
 	else

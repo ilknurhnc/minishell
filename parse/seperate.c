@@ -3,40 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   seperate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:24:37 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 19:49:59 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/03 12:57:13 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	separate_two(t_token *token, char *content, int len, int location)
+static void seperate_two_helper(t_token *token, t_token *temp, char *content, int len)
 {
-	t_token	*temp;
-	t_token	*new;
-	char	*str;
+	t_token *new;
+
+	new = ft_lstnew(ft_substr(token->content, len, ft_strlen(token->content) - len));
+	token->next = new;
+	new->next = temp;
+	free(token->content);
+	token->content = ft_strdup(content);
+	new->space = token->space;
+	token->space = 0;
+}
+
+void separate_two(t_token *token, char *content, int len, int location)
+{
+	t_token *temp;
+	t_token *new;
+	char *str;
+	char *tmp;
 
 	temp = token->next;
 	if (location == 0)
-	{
-		new = ft_lstnew(ft_substr(token->content, len, ft_strlen(token->content)
-					- len));
-		token->next = new;
-		new->next = temp;
-		free(token->content);
-		token->content = ft_strdup(content);
-		new->space = token->space;
-		token->space = 0;
-	}
+		seperate_two_helper(token, temp, content, len);
 	else
 	{
 		new = ft_lstnew(ft_strdup(content));
 		token->next = new;
 		new->next = temp;
-		str = ft_strdup(ft_substr(token->content, 0, ft_strlen(token->content)
-					- len));
+		tmp = ft_substr(token->content, 0, ft_strlen(token->content) - len);
+		str = ft_strdup(tmp);
+		free(tmp);
 		free(token->content);
 		token->content = str;
 		new->space = token->space;

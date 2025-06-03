@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 22:04:24 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/03 13:50:01 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,13 +167,31 @@ char *get_next_path_dir(char *path_str, int *start_pos)
     return token;
 }
 
+char *is_executable_path(char *command)
+{
+    if (!command || !*command)
+        return NULL;
+
+    if (command[0] == '/' || 
+        (command[0] == '.' && (command[1] == '/' || (command[1] == '.' && command[2] == '/'))))
+    {
+        if (access(command, X_OK) == 0)
+            return ft_strdup(command);
+    }
+    return NULL;
+}
+
 char *find_command_path(t_main *program, char *command)
 {
     char *dir;
     char *full_path;
     char *path_env;
+    char *exec_path;
     int pos;
     
+    exec_path = is_executable_path(command);
+    if (exec_path)
+        return exec_path;
     path_env = get_path_from_env(program->env);
     if (!path_env)
         return NULL;

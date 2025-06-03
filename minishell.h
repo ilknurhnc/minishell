@@ -59,6 +59,7 @@ typedef struct s_executor
 	char *outfile;
 	char *infile;
 	int				heredoc_file;
+	int				exit_status;
 	char				**heredoc_delimiters;
 	char *append;
 	char *error;
@@ -108,6 +109,8 @@ size_t count_word(char *p, char c);
 size_t check(char **list, size_t count);
 void exec_init(t_main *program);
 int space_control(char *s);
+int	ft_atoi(const char *str);
+char	*ft_itoa(int num);
 
 // signal
 void signal_init(void);
