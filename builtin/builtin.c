@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/03 16:26:03 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/04 02:40:54 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	ft_echo(t_executor *node)
 		return (1);
 	i = 1;
 	newline = 1;
-	//printf("[MINISHELL ECHO]: ");
+	printf("[MINISHELL ECHO]: ");
 	while (node->argv[i] && is_valid_n_flag(node->argv[i]))
 	{
 		newline = 0;
@@ -79,7 +79,6 @@ int	ft_pwd(t_executor *node)
 	return (0);
 }
 
-
 int	ft_env(t_executor *exec_node)
 {
 	t_main	*prog;
@@ -89,7 +88,7 @@ int	ft_env(t_executor *exec_node)
 	tmp = prog->env;
 	while (tmp)
 	{
-		if (tmp->full_str != NULL)
+		if (tmp->full_str != NULL && tmp->control == 0)
 			printf("%s\n", tmp->full_str);
 		tmp = tmp->next;
 	}

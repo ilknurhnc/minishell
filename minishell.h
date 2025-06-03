@@ -34,6 +34,7 @@ typedef struct s_token
 
 typedef struct s_env
 {
+	int control;
 	char *full_str;
 	char *before_eq;
 	char *after_eq;
@@ -66,6 +67,7 @@ typedef struct s_executor
 	int pipe;
 	struct s_executor *next;
 	t_main *program;
+
 } t_executor;
 
 typedef struct s_exec

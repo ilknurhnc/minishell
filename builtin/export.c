@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/03 12:55:07 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/04 02:44:49 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	print_export_format(t_env *env)
 {
 	while (env)
 	{
-		if (env->after_eq)
+		if (env->control == 0)
 			printf("declare -x %s=\"%s\"\n", env->before_eq, env->after_eq);
 		else
 			printf("declare -x %s\n", env->before_eq);
@@ -52,6 +52,8 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 	{
 		if (ft_strcmp(tmp->before_eq, key) == 0)
 		{
+			if (ft_strlen(value) == 0)
+				return ;
 			free(tmp->after_eq);
 			tmp->after_eq = ft_strdup(value);
 			free(tmp->full_str);
@@ -64,6 +66,8 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 		tmp = tmp->next;
 	}
 	new = a_lstnew(ft_strdup(key), ft_strdup(value));
+	if (ft_strlen(value) == 0)
+		new->control = 1;
 	ft_envadd_back(&prog->env, new);
 	tmp1 = ft_strjoin(ft_strdup(key), ft_strdup("="));
 	new->full_str = ft_strjoin(tmp1, ft_strdup(value));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:54:45 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 16:57:43 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/04 01:40:29 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_exit(t_executor *cmd)
 		printf("minishell: exit: too many arguments\n");
 		return (1);
 	}
-	//free_resources(cmd->program);
+	free_resources(cmd->program);
 	exit(exit_code);
 	return (0);
 }
