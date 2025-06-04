@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/04 01:51:32 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/04 13:06:06 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char	*join_path(const char *dir, const char *cmd)
 	if (!full_path)
 		return (NULL);
 	strcpy(full_path, dir);
-	if (dir[strlen(dir) - 1] != '/')
+	if (dir[ft_strlen(dir) - 1] != '/')
 		strcat(full_path, "/");
 	strcat(full_path, cmd);
 	return (full_path);

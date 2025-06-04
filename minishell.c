@@ -6,35 +6,11 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:30 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 13:22:34 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/04 12:23:36 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_token(t_token *list)
-{
-	while (list)
-	{
-		printf("%s\n", list->content);
-		printf("%d\n", list->space);
-		printf("%d\n", list->flag);
-		printf("RANK %d\n\n", list->rank);
-		list = list->next;
-	}
-}
-
-void	print_exec(t_exec *exec)
-{
-	while (exec)
-	{
-		if (exec->content)
-			printf("%s\n", exec->content);
-		if(exec->rank)
-			printf("RANK %d\n", exec->rank);
-		exec = exec->next;
-	}
-}
 
 int	parsing(char *line, t_main *program)
 {
@@ -64,6 +40,9 @@ int	main(int ac, char **av, char **env)
 	if (ac != 1)
 		exit(61);
 	signal_init();
+	program.env_str = calloc(sizeof(char *), 1000);
+	if (!program.env_str)
+		exit(1); // DÜZELT
 	env_init(&program, env);
 	while (1)
 	{
@@ -73,6 +52,7 @@ int	main(int ac, char **av, char **env)
 			//readline() NULL döndürecektir
 		{
 			printf("exit\n");
+			free_token(&program);
 			break ;
 		}
 		else if(space_control(line) == 0)

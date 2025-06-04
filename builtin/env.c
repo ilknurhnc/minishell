@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 16:56:25 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/04 12:22:56 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,28 @@ void	get_env(t_env **envp, char **env)
 
 void	fill_array(t_main *program, int i)
 {
-	t_main	*temp;
 	t_env	*env;
 	int		index;
 
-	index = 0;
 	env = program->env;
-	temp = program;
-	temp->env_str = (char **)malloc(sizeof(char *) * (i + 1));
-	if (!temp->env_str)
+	if (program->env_str)
+	{
+		index = 0;
+		while (program->env_str[index])
+			free(program->env_str[index++]);
+		free(program->env_str);
+	}
+	program->env_str = malloc(sizeof(char *) * (i + 1));
+	if (!program->env_str)
 		return ;
+	index = 0;
 	while (i > index && env)
 	{
-		temp->env_str[index] = ft_strdup(env->full_str);
+		program->env_str[index] = ft_strdup(env->full_str);
 		index++;
 		env = env->next;
 	}
-	temp->env_str[index] = NULL;
+	program->env_str[index] = NULL;
 }
 
 void	set_env(t_main *program, t_env *env)
