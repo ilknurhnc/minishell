@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/04 08:45:53 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:22:27 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 			tmp1 = ft_strjoin(ft_strdup(key), ft_strdup("="));
 			tmp2 = ft_strjoin(tmp1, ft_strdup(value));
 			tmp->full_str = tmp2;
+			tmp->control = 0;
 			fill_array(prog, ft_lstsize_env(prog->env));
 			return ;
 		}
