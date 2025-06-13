@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/12 09:58:22 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/13 07:07:50 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,22 @@ char	*get_env_value(t_env *env, char *key)
 	return (NULL);
 }
 
+static void update_cd(t_main *prog, char *oldpwd)
+{
+	char	*newpwd;
+	
+	update_or_add_env(prog, "OLDPWD", oldpwd);
+	free(oldpwd);
+	newpwd = getcwd(NULL, 0);
+	update_or_add_env(prog, "PWD", newpwd);
+	free(newpwd);
+}
+
 int	ft_cd(t_executor *node)
 {
 	t_main	*prog;
 	char	*target;
 	char	*oldpwd;
-	char	*newpwd;
 
 	prog = node->program;
 	oldpwd = getcwd(NULL, 0);
@@ -48,11 +58,6 @@ int	ft_cd(t_executor *node)
 		free(oldpwd);
 		return (1);
 	}
-	update_or_add_env(prog, "OLDPWD", oldpwd);
-	free(oldpwd);
-
-	newpwd = getcwd(NULL, 0);
-	update_or_add_env(prog, "PWD", newpwd);
-	free(newpwd);
+	update_cd(prog, oldpwd);
 	return (0);
 }

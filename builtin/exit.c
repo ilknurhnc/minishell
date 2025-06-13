@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:54:45 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/13 03:29:13 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/13 07:14:05 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,22 @@ void	free_resources(t_main *program)
 	free_executer(program);
 }
 
+void exit_helper(t_executor *cmd, int exit_code)
+{
+	if (is_numeric(cmd->argv[1]))
+	{
+		cmd->program->exit_status = ft_atoi(cmd->argv[1]) % 256;
+		exit_code = ft_atoi(cmd->argv[1]) % 256;
+	}
+	else
+	{
+		printf("minishell: exit: %s: numeric argument required\n",
+		cmd->argv[1]);
+		free_resources(cmd->program);
+		exit(255);
+	}
+}
+
 int	ft_exit(t_executor *cmd)
 {
 	int	argc;
@@ -50,18 +66,7 @@ int	ft_exit(t_executor *cmd)
         printf("%d\n",cmd->program->exit_status);
     }
 	else if (argc == 2)
-	{
-		if (is_numeric(cmd->argv[1]))
-			{cmd->program->exit_status = ft_atoi(cmd->argv[1]) % 256;
-			exit_code = ft_atoi(cmd->argv[1]) % 256;}
-		else
-		{
-			printf("minishell: exit: %s: numeric argument required\n",
-				cmd->argv[1]);
-			free_resources(cmd->program);
-			exit(255);
-		}
-	}
+		exit_helper(cmd, exit_code);
 	else
 	{
 		printf("minishell: exit: too many arguments\n");

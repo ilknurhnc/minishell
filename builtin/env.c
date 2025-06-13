@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/12 09:42:59 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/13 07:08:15 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,9 @@ void	set_env(t_main *program, t_env *env)
 
 	i = 0;
 	temp = env;
-	// while (temp)
-	// {
-	// 	new = ft_strdup(temp->before_eq);
-	// 	str = ft_strjoin(new, ft_strdup("="));
-	// 	new = ft_strdup(temp->after_eq);
-	// 	temp->full_str = ft_strjoin(str, new);
-	// 	temp->program = program;
-	// 	temp = temp->next;
-	// } 
 	while (temp)
 	{
-		if (temp->full_str) // 💥 varsa önce bunu temizle!
+		if (temp->full_str)
 			free(temp->full_str);
 		new = ft_strdup(temp->before_eq);
 		str = ft_strjoin(new, ft_strdup("="));

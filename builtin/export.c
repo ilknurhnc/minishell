@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/12 09:45:09 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/13 11:49:20 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,25 @@ void	print_export_format(t_env *env)
 	}
 }
 
+static void add_env(t_main *prog, char *key, char *value)
+{
+	t_env	*new;
+	char *tmp;
+	
+	new = a_lstnew(ft_strdup(key), ft_strdup(value));
+	if (ft_strlen(value) == 0)
+		new->control = 1;
+	ft_envadd_back(&prog->env, new);
+	tmp = ft_strjoin(ft_strdup(key), ft_strdup("="));
+	free(new->full_str);
+	new->full_str = ft_strjoin(tmp, ft_strdup(value));
+}
+
 void	update_or_add_env(t_main *prog, char *key, char *value)
 {
 	t_env	*tmp;
 	char	*tmp1;
 	char	*tmp2;
-	t_env	*new;
 
 	tmp = prog->env;
 	while (tmp)
@@ -66,22 +79,37 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 		}
 		tmp = tmp->next;
 	}
-	new = a_lstnew(ft_strdup(key), ft_strdup(value));
-	if (ft_strlen(value) == 0)
-		new->control = 1;
-	ft_envadd_back(&prog->env, new);
-	tmp1 = ft_strjoin(ft_strdup(key), ft_strdup("="));
-	free(new->full_str);
-	new->full_str = ft_strjoin(tmp1, ft_strdup(value));
+	add_env(prog, key, value);
+}
+
+int handle_export(t_main *prog , t_executor *node, int i)
+{
+	char	*equal_pos;
+	char	*key;
+	char	*value;
+	int		key_len;
+	
+	equal_pos = ft_strchr(node->argv[i], '=');
+	if (equal_pos)
+	{
+		key_len = equal_pos - node->argv[i];
+		key = ft_substr(node->argv[i], 0, key_len);
+		value = ft_substr(equal_pos + 1, 0, strlen(equal_pos + 1));
+		update_or_add_env(prog, key, value);
+		set_env(prog, prog->env);
+		i++;
+		free(value);
+		free(key);
+		return 1;
+	}
+	else
+		update_or_add_env(prog, node->argv[i], "");
+	return 0;
 }
 
 int	ft_export(t_executor *node)
 {
 	t_main	*prog;
-	char	*equal_pos;
-	int		key_len;
-	char	*key;
-	char	*value;
 	int		i;
 
 	prog = node->program;
@@ -100,24 +128,32 @@ int	ft_export(t_executor *node)
 			i++;
 			continue ;
 		}
-		equal_pos = ft_strchr(node->argv[i], '=');
-		if (equal_pos)
+		if(handle_export(prog, node, i) == 1)
 		{
-			key_len = equal_pos - node->argv[i];
-			key = ft_substr(node->argv[i], 0, key_len);
-			value = ft_substr(equal_pos + 1, 0, strlen(equal_pos + 1));
-			update_or_add_env(prog, key, value);
-			set_env(prog, prog->env);
 			i++;
-			free(value);
-			free(key);
-			continue ;
+			continue;
 		}
-		else
-		{
-			update_or_add_env(prog, node->argv[i], "");
-			i++;
-		}
+			
+		i++;
 	}
 	return (0);
 }
+
+		// equal_pos = ft_strchr(node->argv[i], '=');
+		// if (equal_pos)
+		// {
+		// 	key_len = equal_pos - node->argv[i];
+		// 	key = ft_substr(node->argv[i], 0, key_len);
+		// 	value = ft_substr(equal_pos + 1, 0, strlen(equal_pos + 1));
+		// 	update_or_add_env(prog, key, value);
+		// 	set_env(prog, prog->env);
+		// 	i++;
+		// 	free(value);
+		// 	free(key);
+		// 	continue ;
+		// }
+		// else
+		// {
+		// 	update_or_add_env(prog, node->argv[i], "");
+		// 	i++;
+		// }
