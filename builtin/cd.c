@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/04 12:29:07 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/12 09:58:22 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,9 @@ int	ft_cd(t_executor *node)
 	}
 	else
 		target = node->argv[1];
-
 	if (!target || chdir(target) != 0)
 	{
-		printf("minishella: cd: %s: No such file or directory\n", target);
+		printf("minishell: cd: %s: No such file or directory\n", target);
 		free(oldpwd);
 		return (1);
 	}

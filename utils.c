@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:27 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/04 02:27:43 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/12 09:49:01 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,6 +373,7 @@ t_env	*a_lstnew(char *before, char *after)
 		exit(1);
 	}
 	new->control = 0;
+	new->full_str = malloc(sizeof(before) + sizeof(after) + 2);
 	new->before_eq = before;
 	new->after_eq = after;
 	new->next = NULL;

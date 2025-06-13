@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/11 14:13:21 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/13 03:20:46 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 		printf("%s: command not found\n", node->argv[0]);
 		free_token(node->program);
 		free_exec(node->program);
+		free_env(node->program);
 		free_executer(node->program);
 		exit(127);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:54:45 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/04 01:40:29 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/13 03:29:13 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int	is_numeric(char *str)
 
 void	free_resources(t_main *program)
 {
-	free_env(program);
 	free_token(program);
 	free_exec(program);
+	free_env(program);
 	free_executer(program);
 }
 
@@ -49,7 +49,6 @@ int	ft_exit(t_executor *cmd)
         exit_code = cmd->program->exit_status;
         printf("%d\n",cmd->program->exit_status);
     }
-		
 	else if (argc == 2)
 	{
 		if (is_numeric(cmd->argv[1]))

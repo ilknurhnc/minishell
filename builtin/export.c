@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/11 15:22:27 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/12 09:45:09 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 		new->control = 1;
 	ft_envadd_back(&prog->env, new);
 	tmp1 = ft_strjoin(ft_strdup(key), ft_strdup("="));
+	free(new->full_str);
 	new->full_str = ft_strjoin(tmp1, ft_strdup(value));
 }
 
@@ -108,6 +109,8 @@ int	ft_export(t_executor *node)
 			update_or_add_env(prog, key, value);
 			set_env(prog, prog->env);
 			i++;
+			free(value);
+			free(key);
 			continue ;
 		}
 		else

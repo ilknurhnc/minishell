@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/04 02:40:54 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/12 21:52:39 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,18 @@ int	ft_pwd(t_executor *node)
 	return (0);
 }
 
-int	ft_env(t_executor *exec_node)
+int	ft_env(t_executor *exec_node) 
 {
 	t_main	*prog;
 	t_env	*tmp;
 
 	prog = exec_node->program;
 	tmp = prog->env;
+	if (get_env_value(prog->env, "PATH") == NULL)
+	{
+		printf("minishell: env: No such file or directory\n");
+		return (1);
+	}
 	while (tmp)
 	{
 		if (tmp->full_str != NULL && tmp->control == 0)
