@@ -6,23 +6,64 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 17:26:03 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/19 19:56:36 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	sigint_heredoc_handler(int sig)
+void sigint_handler(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	//rl_on_new_line();
 	exit(130);
+}
+
+void	do_heredoc_write(char *delimiter, int write_fd, t_executor *cmd)
+{
+	char	**lines = NULL;
+	char	*line;
+	int		count = 0;
+	int		i;
+
+	signal(SIGINT, sigint_handler);
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line || strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break;
+		}
+		char **tmp = realloc(lines, sizeof(char *) * (count + 2));
+		if (!tmp)
+		{
+			perror("realloc");
+			exit(1);
+		}
+		lines = tmp;
+		lines[count++] = line;
+		lines[count] = NULL;
+	}
+
+	// SIGINT almadıysan yaz
+	for (i = 0; i < count; i++)
+	{
+		write(write_fd, lines[i], strlen(lines[i]));
+		write(write_fd, "\n", 1);
+		free(lines[i]);
+	}
+	free(lines);
+	close(write_fd);
+	free_resources(cmd->program);
+	exit(0);
 }
 
 void	handle_heredoc(t_executor *cmd)
 {
 	int		pipefd[2];
-	char	*line;
 	pid_t	pid;
 	int		status;
 
@@ -34,75 +75,19 @@ void	handle_heredoc(t_executor *cmd)
 		exit(1);
 	}
 	pid = fork();
-	if (pid == -1)
+	if (pid == 0)
+		do_heredoc_write(cmd->heredoc_delimiters[0], pipefd[1] , cmd);
+	close(pipefd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
-		perror("fork");
-		exit(1);
-	}
-	else if (pid == 0)
-	{
-		signal(SIGINT, sigint_heredoc_handler);
 		close(pipefd[0]);
-		while (1)
-		{
-			line = readline("heredoc> ");
-			if (!line || strcmp(line, cmd->heredoc_delimiters[0]) == 0)
-			{
-				free(line);
-				break ;
-			}
-			write(pipefd[1], line, strlen(line));
-			write(pipefd[1], "\n", 1);
-			free(line);
-		}
-		close(pipefd[1]);
-		free_token(cmd->program);
-		free_exec(cmd->program);
-		free_env(cmd->program);
-		free_executer(cmd->program);
-		exit(0);
+		cmd->heredoc_file = -1; // heredoc iptal
 	}
 	else
-	{
-		close(pipefd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			cmd->heredoc_file = -1;
-			close(pipefd[0]);
-		}
-		else
-			cmd->heredoc_file = pipefd[0];
-	}
+		cmd->heredoc_file = pipefd[0];
 }
 
-// void	handle_heredoc(t_executor *cmd)
-// {
-// 	int		pipefd[2];
-// 	char	*line;
-
-// 	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
-// 		return ;
-// 	if (pipe(pipefd) == -1)
-// 	{
-// 		perror("pipe");
-// 		exit(1);
-// 	}
-// 	while (1)
-// 	{
-// 		line = readline("heredoc> ");
-// 		if (!line || strcmp(line, cmd->heredoc_delimiters[0]) == 0)
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		write(pipefd[1], line, strlen(line));
-// 		write(pipefd[1], "\n", 1);
-// 		free(line);
-// 	}
-// 	close(pipefd[1]);
-// 	cmd->heredoc_file = pipefd[0];
-// }
 
 void	pipe_count(t_exec *node)
 {
@@ -300,10 +285,7 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 	if (!cmd_path)
 	{
 		printf("%s: command not found\n", node->argv[0]);
-		free_token(node->program);
-		free_exec(node->program);
-		free_env(node->program);
-		free_executer(node->program);
+		free_resources(node->program);
 		exit(127);
 	}
 	execve(cmd_path, node->argv, node->program->env_str);
@@ -357,10 +339,7 @@ void	child_process(t_executor *current, int *pipefds, int output_fd,
 	{
 		if (current->error)
 			fprintf(stderr, "minishell: %s\n", current->error);
-	free_token(current->program);
-	free_exec(current->program);
-	free_env(current->program);
-	free_executer(current->program);
+		free_resources(current->program);
 		exit(1);
 	}
 	if (is_builtin_command(current->argv[0]))

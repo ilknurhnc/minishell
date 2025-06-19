@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:18:43 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/02 19:50:18 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/19 20:24:44 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void set_heredoc(t_exec *current, t_executor *cmd, int i)
 			if (!cmd->heredoc_delimiters)
 				exit(1);
 		}
+		if(cmd->heredoc_delimiters[i])
+			free(cmd->heredoc_delimiters[i]);
 		cmd->heredoc_delimiters[i] = ft_strdup(current->next->content);
 	}
 }

@@ -161,6 +161,7 @@ void free_token(t_main *program);
 void setting_str(t_main *program);
 void setting_sign(t_main *program);
 void	free_executer(t_main *program);
+void	free_resources(t_main *program);
 
 // exec
 
@@ -187,3 +188,4 @@ int	ft_cd(t_executor *node);
 int	ft_exit(t_executor *cmd);
 
 #endif
+
