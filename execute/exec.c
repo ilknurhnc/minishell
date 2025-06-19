@@ -6,16 +6,27 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/13 14:43:26 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/19 12:03:47 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+
+void	sigint_heredoc_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	exit(130);
+}
+
+
 void	handle_heredoc(t_executor *cmd)
 {
 	int		pipefd[2];
 	char	*line;
+	pid_t	pid;
+	int		status;
 
 	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
 		return ;
@@ -24,21 +35,72 @@ void	handle_heredoc(t_executor *cmd)
 		perror("pipe");
 		exit(1);
 	}
-	while (1)
+	pid = fork();
+	if (pid == -1)
 	{
-		line = readline("heredoc> ");
-		if (!line || strcmp(line, cmd->heredoc_delimiters[0]) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write(pipefd[1], line, strlen(line));
-		write(pipefd[1], "\n", 1);
-		free(line);
+		perror("fork");
+		exit(1);
 	}
-	close(pipefd[1]);
-	cmd->heredoc_file = pipefd[0];
+	else if (pid == 0)
+	{
+		signal(SIGINT, sigint_heredoc_handler);
+		close(pipefd[0]);
+		while (1)
+		{
+			line = readline("heredoc> ");
+			if (!line || strcmp(line, cmd->heredoc_delimiters[0]) == 0)
+			{
+				free(line);
+				break ;
+			}
+			write(pipefd[1], line, strlen(line));
+			write(pipefd[1], "\n", 1);
+			free(line);
+		}
+		close(pipefd[1]);
+		exit(0);
+	}
+	else
+	{
+		close(pipefd[1]);
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			cmd->heredoc_file = -1;
+			close(pipefd[0]);
+		}
+		else
+			cmd->heredoc_file = pipefd[0];
+	}
 }
+
+// void	handle_heredoc(t_executor *cmd)
+// {
+// 	int		pipefd[2];
+// 	char	*line;
+
+// 	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
+// 		return ;
+// 	if (pipe(pipefd) == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(1);
+// 	}
+// 	while (1)
+// 	{
+// 		line = readline("heredoc> ");
+// 		if (!line || strcmp(line, cmd->heredoc_delimiters[0]) == 0)
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		write(pipefd[1], line, strlen(line));
+// 		write(pipefd[1], "\n", 1);
+// 		free(line);
+// 	}
+// 	close(pipefd[1]);
+// 	cmd->heredoc_file = pipefd[0];
+// }
 
 void	pipe_count(t_exec *node)
 {

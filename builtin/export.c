@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/13 11:49:20 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/19 12:08:35 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,22 +138,3 @@ int	ft_export(t_executor *node)
 	}
 	return (0);
 }
-
-		// equal_pos = ft_strchr(node->argv[i], '=');
-		// if (equal_pos)
-		// {
-		// 	key_len = equal_pos - node->argv[i];
-		// 	key = ft_substr(node->argv[i], 0, key_len);
-		// 	value = ft_substr(equal_pos + 1, 0, strlen(equal_pos + 1));
-		// 	update_or_add_env(prog, key, value);
-		// 	set_env(prog, prog->env);
-		// 	i++;
-		// 	free(value);
-		// 	free(key);
-		// 	continue ;
-		// }
-		// else
-		// {
-		// 	update_or_add_env(prog, node->argv[i], "");
-		// 	i++;
-		// }
