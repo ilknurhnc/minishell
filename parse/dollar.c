@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:49:44 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/03 17:13:03 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/19 14:41:32 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*dollar_handle(char *dollar, t_env *env)
 	{
 		new_dollar = ft_itoa(env->program->exit_status);
 		new = ft_strdup(new_dollar);
+		free(new_dollar);
 	}
 	else
 	{

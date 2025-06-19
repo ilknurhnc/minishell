@@ -6,12 +6,11 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 12:03:47 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/19 14:45:06 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 void	sigint_heredoc_handler(int sig)
 {
@@ -19,7 +18,6 @@ void	sigint_heredoc_handler(int sig)
 	write(1, "\n", 1);
 	exit(130);
 }
-
 
 void	handle_heredoc(t_executor *cmd)
 {
@@ -58,6 +56,10 @@ void	handle_heredoc(t_executor *cmd)
 			free(line);
 		}
 		close(pipefd[1]);
+		free_token(cmd->program);
+		free_exec(cmd->program);
+		free_env(cmd->program);
+		free_executer(cmd->program);
 		exit(0);
 	}
 	else
@@ -355,9 +357,10 @@ void	child_process(t_executor *current, int *pipefds, int output_fd,
 	{
 		if (current->error)
 			fprintf(stderr, "minishell: %s\n", current->error);
-		free_token(current->program);
-		free_exec(current->program);
-		free_executer(current->program);
+	free_token(current->program);
+	free_exec(current->program);
+	free_env(current->program);
+	free_executer(current->program);
 		exit(1);
 	}
 	if (is_builtin_command(current->argv[0]))
