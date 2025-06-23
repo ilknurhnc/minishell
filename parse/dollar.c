@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:49:44 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/19 18:09:04 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/23 19:09:22 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char *dollar_handle(char *dollar, t_env *env)
 	}
 	else if (ft_strcmp(dollar, "?") == 0)
 	{
-		new_dollar = ft_itoa(env->program->exit_status);
+		new_dollar = ft_itoa(*get_exit_status_code());
 		new = ft_strdup(new_dollar);
 		free(new_dollar);
 	}

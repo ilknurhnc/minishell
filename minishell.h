@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+extern int	g_signal_exit;
 
 typedef struct s_token t_token;
 typedef struct s_env t_env;
@@ -118,6 +119,8 @@ char	*ft_itoa(int num);
 // signal
 void signal_init(void);
 void signal_handler(int signal);
+int	*get_exit_status_code(void);
+void	set_exit_status_code(int status);
 
 // quotes
 char *empty_quotes(char *line);

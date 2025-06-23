@@ -6,62 +6,51 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 19:56:36 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/23 18:55:53 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void sigint_handler(int sig)
+int	*get_exit_status_code(void)
 {
-	(void)sig;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	//rl_on_new_line();
-	exit(130);
+	static int	exit_status = 0;
+	return (&exit_status);
 }
 
-void	do_heredoc_write(char *delimiter, int write_fd, t_executor *cmd)
+void	set_exit_status_code(int status)
 {
-	char	**lines = NULL;
-	char	*line;
-	int		count = 0;
-	int		i;
+	*get_exit_status_code() = status;
+}
 
-	signal(SIGINT, sigint_handler);
+void	do_heredoc_write(char *delimiter, int write_fd, t_main *program)
+{
+	char	*line;
+
+	(void)program;
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (!line || strcmp(line, delimiter) == 0)
+		if (!line)
+		{
+			// Ctrl+D veya sinyal durumunda temiz çıkış
+			// free_resources(program);
+			close(write_fd);
+			exit(130);
+		}
+		if (strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break;
 		}
-		char **tmp = realloc(lines, sizeof(char *) * (count + 2));
-		if (!tmp)
-		{
-			perror("realloc");
-			exit(1);
-		}
-		lines = tmp;
-		lines[count++] = line;
-		lines[count] = NULL;
+		write(write_fd, line, strlen(line));
+		write(write_fd, "\n", 1);
+		free(line);
 	}
 
-	// SIGINT almadıysan yaz
-	for (i = 0; i < count; i++)
-	{
-		write(write_fd, lines[i], strlen(lines[i]));
-		write(write_fd, "\n", 1);
-		free(lines[i]);
-	}
-	free(lines);
-	close(write_fd);
-	free_resources(cmd->program);
-	exit(0);
 }
 
-void	handle_heredoc(t_executor *cmd)
+void	handle_heredoc(t_executor *cmd, t_main *program)
 {
 	int		pipefd[2];
 	pid_t	pid;
@@ -72,20 +61,43 @@ void	handle_heredoc(t_executor *cmd)
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
+		free_resources(program);
 		exit(1);
 	}
+
 	pid = fork();
 	if (pid == 0)
-		do_heredoc_write(cmd->heredoc_delimiters[0], pipefd[1] , cmd);
-	close(pipefd[1]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
+		static char str[10000];
+		int i;
+
+		i = -1;
+		signal(SIGINT, signal_handler);
+		while (cmd->heredoc_delimiters[0][++i])
+			str[i] = cmd->heredoc_delimiters[0][i];
+		g_signal_exit = 1; // heredoc child
+		free_resources(program); 
 		close(pipefd[0]);
-		cmd->heredoc_file = -1; // heredoc iptal
+		do_heredoc_write(str, pipefd[1], program);
+		close(pipefd[1]);
+		exit(0);
 	}
 	else
-		cmd->heredoc_file = pipefd[0];
+	{
+		g_signal_exit = 2;
+		signal(SIGINT, signal_handler);
+		close(pipefd[1]);
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			set_exit_status_code(130);
+			close(pipefd[0]);
+			cmd->heredoc_file = -1;
+		}
+		else
+			cmd->heredoc_file = pipefd[0];
+		g_signal_exit = 0;
+	}
 }
 
 
@@ -317,6 +329,8 @@ void	single_built_in(t_executor *current)
 void	child_process(t_executor *current, int *pipefds, int output_fd,
 		int prev_fd)
 {
+	int code;
+	
 	if (current->next)
 		close(pipefds[0]);
 	if (current->heredoc_file != -1)
@@ -343,7 +357,11 @@ void	child_process(t_executor *current, int *pipefds, int output_fd,
 		exit(1);
 	}
 	if (is_builtin_command(current->argv[0]))
-		exit(execute_builtin(current));
+	{		
+		code = execute_builtin(current);
+		free_resources(current->program);
+		exit(code);
+	}	
 	else
 		run_execve(current, STDIN_FILENO, STDOUT_FILENO);
 }
@@ -387,7 +405,7 @@ void	main_execute(t_executor *exec, int prev_fd)
 	{
 		output_fd = STDOUT_FILENO;
 		if (current->heredoc_delimiters && current->heredoc_delimiters[0])
-			handle_heredoc(current);
+			handle_heredoc(current, current->program);
 		if (current->next)
 		{
 			if (pipe(pipefds) == -1)

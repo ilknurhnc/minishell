@@ -6,23 +6,57 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:23 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 17:26:11 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/23 14:28:24 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	signal_handler(int signal)
+int		g_signal_exit = 0;
+
+void	signal_handler(int sig)
 {
-	(void)signal;
-	printf("\n");
-	rl_on_new_line();       // Readline kullanıyorsanız
-	rl_replace_line("", 0); // Mevcut satırı temizle
-	rl_redisplay();         // Yeni promptu yeniden göster
+	(void)sig;
+	if (g_signal_exit == 0 || g_signal_exit == 130)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	else if (g_signal_exit == 2)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+	}
+	else if (g_signal_exit == 1)
+	{
+		set_exit_status_code(130);
+		exit(130);
+	}
+	set_exit_status_code(130);
+	g_signal_exit = 130;
 }
 
+// Sinyal ayarları başlangıçta yapılır
 void	signal_init(void)
 {
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+
+
+// void	signal_handler(int signal)
+// {
+// 	(void)signal;
+// 	printf("\n");
+// 	rl_on_new_line();       // Readline kullanıyorsanız
+// 	rl_replace_line("", 0); // Mevcut satırı temizle
+// 	rl_redisplay();         // Yeni promptu yeniden göster
+// }
+
+// void	signal_init(void)
+// {
+// 	signal(SIGINT, signal_handler);
+// 	signal(SIGQUIT, SIG_IGN);
+// }

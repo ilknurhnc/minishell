@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:18:43 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 20:24:44 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/23 19:03:21 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,20 @@
 
 void set_heredoc(t_exec *current, t_executor *cmd, int i)
 {
-	if (current && current->next)
-	{
-		if (!cmd->heredoc_delimiters)
-		{
-			cmd->heredoc_delimiters = malloc(sizeof(char *) * 10);
-			if (!cmd->heredoc_delimiters)
-				exit(1);
-		}
-		if(cmd->heredoc_delimiters[i])
-			free(cmd->heredoc_delimiters[i]);
-		cmd->heredoc_delimiters[i] = ft_strdup(current->next->content);
-	}
+    if (current && current->next)
+    {
+        if (!cmd->heredoc_delimiters)
+        {
+            cmd->heredoc_delimiters = malloc(sizeof(char *) * 10);
+            if (!cmd->heredoc_delimiters)
+                exit(1);
+            for (int j = 0; j < 10; j++)
+                cmd->heredoc_delimiters[j] = NULL;
+        }
+        if (cmd->heredoc_delimiters[i])
+            free(cmd->heredoc_delimiters[i]);
+        cmd->heredoc_delimiters[i] = ft_strdup(current->next->content);
+    }
 }
 
 char *is_directory(const char *path)
@@ -47,19 +49,23 @@ void check_redirect_access_input(const char *filename, t_executor *cmd)
 	if (err)
 	{
 		cmd->error = err;
+		set_exit_status_code(1);
 		return;
 	}
 	if (access(filename, F_OK) < 0)
 	{
 		cmd->error = ft_strdup(": No such file or directory");
+		set_exit_status_code(1);
 		return;
 	}
 	if (access(filename, R_OK) < 0)
 	{
 		cmd->error = ft_strdup(": Permission denied");
+		set_exit_status_code(1);
 		return;
 	}
 }
+
 
 int check_redirect_access(const char *filename, int rank, char **error)
 {
@@ -174,5 +180,15 @@ void redirect_handle(t_executor *node)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
+}
+
+void free_heredoc_delimiters(t_executor *cmd)
+{
+    if (!cmd->heredoc_delimiters)
+        return;
+    for (int i = 0; i < 10; i++)
+        free(cmd->heredoc_delimiters[i]);
+    free(cmd->heredoc_delimiters);
+    cmd->heredoc_delimiters = NULL;
 }
 
