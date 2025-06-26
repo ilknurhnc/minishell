@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/13 07:07:50 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 15:29:13 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ int	ft_cd(t_executor *node)
 	if (!target || chdir(target) != 0)
 	{
 		printf("minishell: cd: %s: No such file or directory\n", target);
+		set_exit_status_code(1);
 		free(oldpwd);
 		return (1);
 	}
+	set_exit_status_code(0);
 	update_cd(prog, oldpwd);
 	return (0);
 }

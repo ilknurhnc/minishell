@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/23 18:55:53 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 15:41:16 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,6 +310,7 @@ void	single_built_in(t_executor *current)
 {
 	int	saved_stdin;
 	int	saved_stdout;
+	int builtin_status;
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
@@ -319,7 +320,8 @@ void	single_built_in(t_executor *current)
 		dup2(current->heredoc_file, STDIN_FILENO);
 		close(current->heredoc_file);
 	}
-	execute_builtin(current);
+	builtin_status = execute_builtin(current);
+	set_exit_status_code(builtin_status);  
 	dup2(saved_stdout, STDOUT_FILENO);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdout);
@@ -360,6 +362,7 @@ void	child_process(t_executor *current, int *pipefds, int output_fd,
 	{		
 		code = execute_builtin(current);
 		free_resources(current->program);
+		set_exit_status_code(1);
 		exit(code);
 	}	
 	else
@@ -399,7 +402,9 @@ void	main_execute(t_executor *exec, int prev_fd)
 	t_executor	*current;
 	int			status;
 	pid_t		pid;
-
+		pid_t		last_pid = -1;
+	int			last_status = 0;
+	
 	current = exec;
 	while (current)
 	{
@@ -424,15 +429,18 @@ void	main_execute(t_executor *exec, int prev_fd)
 			prev_fd = STDIN_FILENO;
 		current = current->next;
 	}
-	t_main *program = exec->program; // current->program
 	while ((pid = wait(&status)) > 0)
 	{
 		if (WIFEXITED(status))
-			program->exit_status = WEXITSTATUS(status);
+			last_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			program->exit_status = 128 + WTERMSIG(status);
+			last_status = 128 + WTERMSIG(status);
+		last_pid = pid;
 	}
+
+	set_exit_status_code(last_status);
 }
+
 
 void	init_exec(t_main *program, t_executor **node, int count)
 {
