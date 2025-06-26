@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:26:05 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 13:23:59 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 20:51:08 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,4 +165,11 @@ void main_free(t_main program, char *line, int key)
 		free_env(&program);
 	}
 	free_program(&program, key);
+}
+void	free_resources(t_main *program)
+{
+	free_token(program);
+	free_exec(program);
+	free_env(program);
+	free_executer(program);
 }

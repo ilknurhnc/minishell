@@ -6,13 +6,13 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/26 15:29:13 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 20:58:20 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_env_value(t_env *env, char *key)
+char *get_env_value(t_env *env, char *key)
 {
 	while (env)
 	{
@@ -25,8 +25,8 @@ char	*get_env_value(t_env *env, char *key)
 
 static void update_cd(t_main *prog, char *oldpwd)
 {
-	char	*newpwd;
-	
+	char *newpwd;
+
 	update_or_add_env(prog, "OLDPWD", oldpwd);
 	free(oldpwd);
 	newpwd = getcwd(NULL, 0);
@@ -34,11 +34,11 @@ static void update_cd(t_main *prog, char *oldpwd)
 	free(newpwd);
 }
 
-int	ft_cd(t_executor *node)
+int ft_cd(t_executor *node)
 {
-	t_main	*prog;
-	char	*target;
-	char	*oldpwd;
+	t_main *prog;
+	char *target;
+	char *oldpwd;
 
 	prog = node->program;
 	oldpwd = getcwd(NULL, 0);
@@ -59,7 +59,6 @@ int	ft_cd(t_executor *node)
 		free(oldpwd);
 		return (1);
 	}
-	set_exit_status_code(0);
 	update_cd(prog, oldpwd);
 	return (0);
 }

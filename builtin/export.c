@@ -6,15 +6,15 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/19 12:08:35 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:27:24 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	is_valid_identifier(char *str)
+int is_valid_identifier(char *str)
 {
-	int	i;
+	int i;
 
 	if (!str || !(ft_isalpha(str[0]) || str[0] == '_'))
 		return (0);
@@ -28,7 +28,7 @@ int	is_valid_identifier(char *str)
 	return (1);
 }
 
-void	print_export_format(t_env *env)
+void print_export_format(t_env *env)
 {
 	while (env)
 	{
@@ -42,9 +42,9 @@ void	print_export_format(t_env *env)
 
 static void add_env(t_main *prog, char *key, char *value)
 {
-	t_env	*new;
+	t_env *new;
 	char *tmp;
-	
+
 	new = a_lstnew(ft_strdup(key), ft_strdup(value));
 	if (ft_strlen(value) == 0)
 		new->control = 1;
@@ -54,11 +54,11 @@ static void add_env(t_main *prog, char *key, char *value)
 	new->full_str = ft_strjoin(tmp, ft_strdup(value));
 }
 
-void	update_or_add_env(t_main *prog, char *key, char *value)
+void update_or_add_env(t_main *prog, char *key, char *value)
 {
-	t_env	*tmp;
-	char	*tmp1;
-	char	*tmp2;
+	t_env *tmp;
+	char *tmp1;
+	char *tmp2;
 
 	tmp = prog->env;
 	while (tmp)
@@ -66,7 +66,7 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 		if (ft_strcmp(tmp->before_eq, key) == 0)
 		{
 			if (ft_strlen(value) == 0)
-				return ;
+				return;
 			free(tmp->after_eq);
 			tmp->after_eq = ft_strdup(value);
 			free(tmp->full_str);
@@ -75,20 +75,20 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 			tmp->full_str = tmp2;
 			tmp->control = 0;
 			fill_array(prog, ft_lstsize_env(prog->env));
-			return ;
+			return;
 		}
 		tmp = tmp->next;
 	}
 	add_env(prog, key, value);
 }
 
-int handle_export(t_main *prog , t_executor *node, int i)
+int handle_export(t_main *prog, t_executor *node, int i)
 {
-	char	*equal_pos;
-	char	*key;
-	char	*value;
-	int		key_len;
-	
+	char *equal_pos;
+	char *key;
+	char *value;
+	int key_len;
+
 	equal_pos = ft_strchr(node->argv[i], '=');
 	if (equal_pos)
 	{
@@ -107,6 +107,12 @@ int handle_export(t_main *prog , t_executor *node, int i)
 	return 0;
 }
 
+void	print_export_error(char *arg)
+{
+	printf("minishell: export: '%s': not a valid identifier\n", arg);
+	set_exit_status_code(1);
+}
+
 int	ft_export(t_executor *node)
 {
 	t_main	*prog;
@@ -123,18 +129,47 @@ int	ft_export(t_executor *node)
 	{
 		if (!is_valid_identifier(node->argv[i]))
 		{
-			printf("minishell: export: '%s': not a valid identifier\n",
-				node->argv[i]);
+			print_export_error(node->argv[i]);
 			i++;
-			continue ;
+			continue;
 		}
-		if(handle_export(prog, node, i) == 1)
+		if (handle_export(prog, node, i) == 1)
 		{
 			i++;
 			continue;
 		}
-			
 		i++;
 	}
 	return (0);
 }
+
+// int ft_export(t_executor *node)
+// {
+// 	t_main *prog;
+// 	int i;
+
+// 	prog = node->program;
+// 	if (!node->argv[1])
+// 	{
+// 		print_export_format(prog->env);
+// 		return (0);
+// 	}
+// 	i = 1;
+// 	while (node->argv[i])
+// 	{
+// 		if (!is_valid_identifier(node->argv[i]))
+// 		{
+// 			printf("minishell: export: '%s': not a valid identifier\n",
+// 				   node->argv[i]);
+// 			i++;
+// 			continue;
+// 		}
+// 		if (handle_export(prog, node, i) == 1)
+// 		{
+// 			i++;
+// 			continue;
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }

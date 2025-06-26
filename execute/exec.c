@@ -6,22 +6,12 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/26 15:41:16 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 20:51:54 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	*get_exit_status_code(void)
-{
-	static int	exit_status = 0;
-	return (&exit_status);
-}
-
-void	set_exit_status_code(int status)
-{
-	*get_exit_status_code() = status;
-}
 
 void	do_heredoc_write(char *delimiter, int write_fd, t_main *program)
 {
@@ -84,7 +74,7 @@ void	handle_heredoc(t_executor *cmd, t_main *program)
 	}
 	else
 	{
-		g_signal_exit = 2;
+		g_signal_exit = 2; //heredoc parent
 		signal(SIGINT, signal_handler);
 		close(pipefd[1]);
 		waitpid(pid, &status, 0);
@@ -437,8 +427,8 @@ void	main_execute(t_executor *exec, int prev_fd)
 			last_status = 128 + WTERMSIG(status);
 		last_pid = pid;
 	}
-
-	set_exit_status_code(last_status);
+	if (last_pid != -1)
+		set_exit_status_code(last_status);
 }
 
 

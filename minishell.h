@@ -152,6 +152,7 @@ void	fill_array(t_main *program, int i);
 int	ft_lstsize_env(t_env *env);
 void	update_or_add_env(t_main *prog, char *key, char *value);
 char	*get_env_value(t_env *env, char *key);
+int	ft_env(t_executor *exec_node);
 
 // free
 void free_program(t_main *program, int key);

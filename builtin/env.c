@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/13 07:08:15 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:03:41 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,3 +98,67 @@ void	set_env(t_main *program, t_env *env)
 	}
 	fill_array(program, i);
 }
+
+int	env_print_error(char *msg, int code)
+{
+	printf("%s\n", msg);
+	return (code);
+}
+
+int	ft_env(t_executor *exec_node)
+{
+	t_main	*prog;
+	t_env	*tmp;
+
+	if (!exec_node)
+		return (1);
+	if (exec_node->argv[1])
+		return (env_print_error("env: No such file or directory", 127));
+	prog = exec_node->program;
+	if (!prog || !prog->env)
+		return (env_print_error("minishell: env: internal error (no environment)", 1));
+	if (!get_env_value(prog->env, "PATH"))
+		return (env_print_error("minishell: env: No such file or directory", 127));
+	tmp = prog->env;
+	while (tmp)
+	{
+		if (tmp->full_str && tmp->control == 0)
+			printf("%s\n", tmp->full_str);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+// int	ft_env(t_executor *exec_node)
+// {
+// 	t_main	*prog;
+// 	t_env	*tmp;
+
+// 	if (!exec_node)
+// 		return (1);
+// 	if (exec_node->argv[1] != NULL)
+// 	{
+// 		printf("env: %s: No such file or directory\n", exec_node->argv[1]);
+// 		return (127);
+// 	}
+// 	prog = exec_node->program;
+// 	if (!prog || !prog->env)
+// 	{
+// 		printf("minishell: env: internal error (no environment)\n");
+// 		return (1);
+// 	}
+// 	if (get_env_value(prog->env, "PATH") == NULL)
+// 	{
+// 		printf("minishell: env: No such file or directory\n");
+// 		return (127);
+// 	}
+// 	tmp = prog->env;
+// 	while (tmp)
+// 	{
+// 		if (tmp->full_str != NULL && tmp->control == 0)
+// 			printf("%s\n", tmp->full_str);
+// 		tmp = tmp->next;
+// 	}
+// 	return (0);
+// }
+
