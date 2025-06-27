@@ -115,6 +115,9 @@ void exec_init(t_main *program);
 int space_control(char *s);
 int	ft_atoi(const char *str);
 char	*ft_itoa(int num);
+char	*ft_strcat(char	*dest, const char	*src);
+char	*ft_strcpy(char *dest, char *src);
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
 
 // signal
 void signal_init(void);
@@ -170,7 +173,6 @@ void	free_resources(t_main *program);
 // exec
 
 void prep_exec(t_main *program);
-void pipe_count(t_exec *node);
 t_exec *set_argv(t_executor **node, t_exec *start, int i);
 
 //redirect
@@ -190,6 +192,13 @@ int	ft_export(t_executor *node);
 int	ft_unset(t_executor *node);
 int	ft_cd(t_executor *node);
 int	ft_exit(t_executor *cmd);
+
+//heredoc_utils
+void	do_heredoc_write(char *delimiter, int write_fd, t_main *program);
+void heredoc_child(t_executor *cmd, t_main *program, int pipefd[2]);
+void heredoc_parent(t_executor *cmd, int pipefd[2], pid_t pid);
+void	handle_heredoc(t_executor *cmd, t_main *program);
+void	pipe_count(t_exec *node);
 
 #endif
 

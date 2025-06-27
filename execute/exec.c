@@ -6,106 +6,11 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:11:21 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/26 20:51:54 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 14:52:16 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
-void	do_heredoc_write(char *delimiter, int write_fd, t_main *program)
-{
-	char	*line;
-
-	(void)program;
-	while (1)
-	{
-		line = readline("heredoc> ");
-		if (!line)
-		{
-			// Ctrl+D veya sinyal durumunda temiz çıkış
-			// free_resources(program);
-			close(write_fd);
-			exit(130);
-		}
-		if (strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break;
-		}
-		write(write_fd, line, strlen(line));
-		write(write_fd, "\n", 1);
-		free(line);
-	}
-
-}
-
-void	handle_heredoc(t_executor *cmd, t_main *program)
-{
-	int		pipefd[2];
-	pid_t	pid;
-	int		status;
-
-	if (!cmd->heredoc_delimiters || !cmd->heredoc_delimiters[0])
-		return ;
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		free_resources(program);
-		exit(1);
-	}
-
-	pid = fork();
-	if (pid == 0)
-	{
-		static char str[10000];
-		int i;
-
-		i = -1;
-		signal(SIGINT, signal_handler);
-		while (cmd->heredoc_delimiters[0][++i])
-			str[i] = cmd->heredoc_delimiters[0][i];
-		g_signal_exit = 1; // heredoc child
-		free_resources(program); 
-		close(pipefd[0]);
-		do_heredoc_write(str, pipefd[1], program);
-		close(pipefd[1]);
-		exit(0);
-	}
-	else
-	{
-		g_signal_exit = 2; //heredoc parent
-		signal(SIGINT, signal_handler);
-		close(pipefd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			set_exit_status_code(130);
-			close(pipefd[0]);
-			cmd->heredoc_file = -1;
-		}
-		else
-			cmd->heredoc_file = pipefd[0];
-		g_signal_exit = 0;
-	}
-}
-
-
-void	pipe_count(t_exec *node)
-{
-	t_exec	*new;
-	int		i;
-
-	new = node;
-	i = 0;
-	while (new)
-	{
-		if (new->rank == 1)
-			i++;
-		new = new->next;
-	}
-	node->pipe = i;
-}
 
 int	design_argv(t_executor **node, t_exec *current, int i)
 {
@@ -143,13 +48,8 @@ t_exec	*set_argv(t_executor **node, t_exec *start, int i)
 	node[i]->argv = malloc(sizeof(char *) * 100);
 	if (!node[i]->argv)
 		return (NULL);
-	while (current)
+	while (current && current->rank && current->rank != 1)
 	{
-		if (current->rank == 1)
-		{
-			current = current->next;
-			break ;
-		}
 		if (current->rank == 4 && current->content)
 			node[i]->argv[j++] = ft_strdup(current->content);
 		if (design_argv(node, current, i) == 1)
@@ -159,22 +59,26 @@ t_exec	*set_argv(t_executor **node, t_exec *start, int i)
 		}
 		current = current->next;
 	}
+	if(current && current->rank == 1)
+		current = current->next;
 	node[i]->argv[j] = NULL;
 	return (current);
 }
+
+// path.c
 
 char	*join_path(char *dir, const char *cmd)
 {
 	char	*full_path;
 
-	int len = strlen(dir) + strlen(cmd) + 2; // '/' + '\0'
+	int len = ft_strlen(dir) + ft_strlen((char *)cmd) + 2;
 	full_path = malloc(len);
 	if (!full_path)
 		return (NULL);
-	strcpy(full_path, dir);
+	ft_strcpy(full_path, dir);
 	if (dir[ft_strlen(dir) - 1] != '/')
-		strcat(full_path, "/");
-	strcat(full_path, cmd);
+		ft_strcat(full_path, "/");
+	ft_strcat(full_path, cmd);
 	return (full_path);
 }
 
@@ -211,7 +115,7 @@ char	*get_next_path_dir(char *path_str, int *start_pos)
 	token = malloc(len + 1);
 	if (!token)
 		return (NULL);
-	strncpy(token, &path_str[start], len);
+	ft_strncpy(token, &path_str[start], len);
 	token[len] = '\0';
 	if (path_str[i] == ':')
 		*start_pos = i + 1;
@@ -224,13 +128,11 @@ char	*is_executable_path(char *command)
 {
 	if (!command || !*command)
 		return NULL;
-
 	if (command[0] == '/')
 	{
 		if (access(command, X_OK) == 0) 
 			return ft_strdup(command);
 	}
-
 	else if (command[0] == '.' && (command[1] == '/' || (command[1] == '.'
 				&& command[2] == '/')))
 	{
@@ -239,7 +141,6 @@ char	*is_executable_path(char *command)
 	}
 	return NULL; 
 }
-
 
 char	*find_command_path(t_main *program, char *command)
 {
@@ -269,6 +170,8 @@ char	*find_command_path(t_main *program, char *command)
 	return NULL;
 }
 
+// path.c
+
 void	run_execve(t_executor *node, int input_fd, int output_fd)
 {
 	char	*cmd_path;
@@ -292,6 +195,7 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 	}
 	execve(cmd_path, node->argv, node->program->env_str);
 	perror("execve failed");
+	free_resources(node->program);
 	free(cmd_path);
 	exit(1);
 }
@@ -344,7 +248,11 @@ void	child_process(t_executor *current, int *pipefds, int output_fd,
 	if (current->error || !current->argv[0])
 	{
 		if (current->error)
-			fprintf(stderr, "minishell: %s\n", current->error);
+		{
+			write(2, "minishell: ", 11);
+			write(2, current->error, ft_strlen(current->error));
+			write(2, "\n", 1);
+		}
 		free_resources(current->program);
 		exit(1);
 	}
@@ -371,7 +279,8 @@ void	ft_fork(t_executor *current, int *pipefds, int output_fd, int prev_fd)
 		pid = fork();
 		if (pid == -1)
 		{
-			perror("fork failed");
+			perror("fork failed.");
+			free_resources(current->program);
 			exit(1);
 		}
 		if (pid == 0)
@@ -406,6 +315,7 @@ void	main_execute(t_executor *exec, int prev_fd)
 			if (pipe(pipefds) == -1)
 			{
 				perror("pipe failed");
+				free_resources(current->program);
 				exit(1);
 			}
 			output_fd = pipefds[1];
