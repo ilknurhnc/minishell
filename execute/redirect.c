@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:18:43 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/23 19:03:21 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 18:55:49 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void set_heredoc(t_exec *current, t_executor *cmd, int i)
 {
-    if (current && current->next)
-    {
-        if (!cmd->heredoc_delimiters)
-        {
-            cmd->heredoc_delimiters = malloc(sizeof(char *) * 10);
-            if (!cmd->heredoc_delimiters)
-                exit(1);
-            for (int j = 0; j < 10; j++)
-                cmd->heredoc_delimiters[j] = NULL;
-        }
-        if (cmd->heredoc_delimiters[i])
-            free(cmd->heredoc_delimiters[i]);
-        cmd->heredoc_delimiters[i] = ft_strdup(current->next->content);
-    }
+	if (current && current->next)
+	{
+		if (!cmd->heredoc_delimiters)
+		{
+			cmd->heredoc_delimiters = malloc(sizeof(char *) * 10);
+			if (!cmd->heredoc_delimiters)
+				exit(1);
+			for (int j = 0; j < 10; j++)
+				cmd->heredoc_delimiters[j] = NULL;
+		}
+		if (cmd->heredoc_delimiters[i])
+			free(cmd->heredoc_delimiters[i]);
+		cmd->heredoc_delimiters[i] = ft_strdup(current->next->content);
+	}
 }
 
 char *is_directory(const char *path)
@@ -66,7 +66,6 @@ void check_redirect_access_input(const char *filename, t_executor *cmd)
 	}
 }
 
-
 int check_redirect_access(const char *filename, int rank, char **error)
 {
 	int fd;
@@ -93,7 +92,7 @@ int check_redirect_access(const char *filename, int rank, char **error)
 	if (fd < 0)
 	{
 		if (*error)
-			return -1; //saçmalık
+			return -1; // saçmalık
 		*error = ft_strdup(": Failed to open file");
 		return -1;
 	}
@@ -184,11 +183,10 @@ void redirect_handle(t_executor *node)
 
 void free_heredoc_delimiters(t_executor *cmd)
 {
-    if (!cmd->heredoc_delimiters)
-        return;
-    for (int i = 0; i < 10; i++)
-        free(cmd->heredoc_delimiters[i]);
-    free(cmd->heredoc_delimiters);
-    cmd->heredoc_delimiters = NULL;
+	if (!cmd->heredoc_delimiters)
+		return;
+	for (int i = 0; i < 10; i++)
+		free(cmd->heredoc_delimiters[i]);
+	free(cmd->heredoc_delimiters);
+	cmd->heredoc_delimiters = NULL;
 }
-

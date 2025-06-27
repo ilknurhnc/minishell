@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/26 21:27:24 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 15:36:59 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,9 @@ int handle_export(t_main *prog, t_executor *node, int i)
 
 void	print_export_error(char *arg)
 {
-	printf("minishell: export: '%s': not a valid identifier\n", arg);
-	set_exit_status_code(1);
+	write(2, "minishell: export: ", 18);
+	write(2, arg, ft_strlen(arg));
+	write(2, ": not a valid identifier\n", 24);
 }
 
 int	ft_export(t_executor *node)
@@ -131,6 +132,7 @@ int	ft_export(t_executor *node)
 		{
 			print_export_error(node->argv[i]);
 			i++;
+			return 1;
 			continue;
 		}
 		if (handle_export(prog, node, i) == 1)

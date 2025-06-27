@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/26 20:59:46 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 15:28:32 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	ft_echo(t_executor *node)
 		return (1);
 	i = 1;
 	newline = 1;
-	printf("[MINISHELL ECHO]: ");
 	while (node->argv[i] && is_valid_n_flag(node->argv[i]))
 	{
 		newline = 0;
@@ -72,7 +71,6 @@ int	ft_pwd(t_executor *node)
 		node->error = "Failed to get current directory";
 		return (1);
 	}
-	printf("[MINISHELL PWD]:");
 	printf("%s\n", cwd);
 	free(cwd);
 	node->error = NULL;

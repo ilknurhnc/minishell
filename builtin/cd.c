@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/26 20:58:20 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 15:46:13 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,16 @@ int ft_cd(t_executor *node)
 		target = node->argv[1];
 	if (!target || chdir(target) != 0)
 	{
-		printf("minishell: cd: %s: No such file or directory\n", target);
+		write(2, "minishell: cd: ", 15);
+		write(2, target, ft_strlen(target));
+		write(2, ": No such file or directory\n", 28);
+		set_exit_status_code(1);
+		free(oldpwd);
+		return (1);
+	}
+	if(node->argv[2]) // If there are more than one argument
+	{
+		write(2, "minishell: cd: too many arguments\n", 34);
 		set_exit_status_code(1);
 		free(oldpwd);
 		return (1);

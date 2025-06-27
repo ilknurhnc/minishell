@@ -200,5 +200,12 @@ void heredoc_parent(t_executor *cmd, int pipefd[2], pid_t pid);
 void	handle_heredoc(t_executor *cmd, t_main *program);
 void	pipe_count(t_exec *node);
 
+// path
+char *join_path(char *dir, const char *cmd);
+char *get_path_from_env(t_env *env);
+char *get_next_path_dir(char *path_str, int *start_pos);
+char *is_executable_path(char *command);
+char *find_command_path(t_main *program, char *command);
+
 #endif
 

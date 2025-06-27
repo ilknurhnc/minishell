@@ -17,6 +17,7 @@ SRCS = 	minishell.c \
 		execute/exec.c \
 		execute/heredoc_utils.c\
 		execute/redirect.c \
+		execute/path.c \
 		free.c\
 		init.c\
 		

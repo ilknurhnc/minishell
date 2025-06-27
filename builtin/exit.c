@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:54:45 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/26 21:04:50 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/27 15:48:41 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void exit_helper(t_executor *cmd, int *exit_code)
 	}
 	else
 	{
-		printf("minishell: exit: %s: numeric argument required\n", cmd->argv[1]);
-		set_exit_status_code(255);
+		write(2, "minishell: exit: ", 17);
+		write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
+		write(2, ": numeric argument required\n", 28);
+		set_exit_status_code(2);
 		free_resources(cmd->program);
-		exit(255);
+		exit(2);
 	}
 }
 
@@ -70,7 +72,7 @@ int ft_exit(t_executor *cmd)
 		exit_helper(cmd, &exit_code);
 	else
 	{
-		printf("minishell: exit: too many arguments\n");
+		write(2, "minishell: cd: too many arguments\n", 34);
 		set_exit_status_code(1);
 		return (1);
 	}
