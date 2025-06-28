@@ -118,6 +118,7 @@ char	*ft_itoa(int num);
 char	*ft_strcat(char	*dest, const char	*src);
 char	*ft_strcpy(char *dest, char *src);
 char	*ft_strncpy(char *dest, char *src, unsigned int n);
+char	*ft_strnstr(const char *src, const char *to_find, size_t n);
 
 // signal
 void signal_init(void);

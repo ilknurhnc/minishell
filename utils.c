@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:27 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/27 13:58:47 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/28 13:56:22 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -567,4 +567,27 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 		i++;
 	}
 	return (dest);
+}
+
+char	*ft_strnstr(const char *src, const char *to_find, size_t n)
+{
+	size_t	j;
+	size_t	i;
+
+	i = 0;
+	j = 0;
+	if (*(to_find) == '\0')
+		return ((char *)src);
+	while (src[i] != '\0')
+	{
+		while (src[i + j] == to_find[j] && (j + i) < n)
+		{
+			j++;
+			if (to_find[j] == '\0')
+				return ((char *)&src[i]);
+		}
+		j = 0;
+		i++;
+	}
+	return (0);
 }
