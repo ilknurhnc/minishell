@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/27 15:28:32 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/30 16:40:50 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,16 @@ int	is_builtin_command(char *cmd)
 
 int	is_valid_n_flag(char *str)
 {
+	int		i;
+
 	if (!str || str[0] != '-' || str[1] != 'n')
 		return (0);
-	for (int i = 2; str[i]; i++)
+	i = 2;
+	while (str[i])
 	{
 		if (str[i] != 'n')
 			return (0);
+		i++;
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:38:37 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/02 19:50:41 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/06/30 16:45:06 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_valid_identifier_unset(char *str)
 {
-	int i;
+	int		i;
 
 	if (!str || !(ft_isalpha(str[0]) || str[0] == '_'))
 		return (0);
@@ -30,9 +30,11 @@ int	is_valid_identifier_unset(char *str)
 
 void	remove_var(t_env **env, char *key)
 {
-	t_env *current = *env;
-	t_env *prev = NULL;
+	t_env	*current;
+	t_env	*prev;
 
+	current = *env;
+	prev = NULL;
 	while (current)
 	{
 		if (ft_strcmp(current->before_eq, key) == 0)
@@ -41,12 +43,11 @@ void	remove_var(t_env **env, char *key)
 				prev->next = current->next;
 			else
 				*env = current->next;
-
 			free(current->before_eq);
 			free(current->after_eq);
 			free(current->full_str);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -66,7 +67,8 @@ int	ft_unset(t_executor *node)
 			remove_var(&prog->env, node->argv[i]);
 		else
 		{
-			printf("minishell: unset: `%s`: not a valid identifier\n", node->argv[i]);
+			printf("minishell: unset: `%s`: not a valid identifier\n",
+				node->argv[i]);
 		}
 		i++;
 	}
