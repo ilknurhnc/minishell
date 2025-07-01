@@ -40,18 +40,21 @@ int	set_rank(t_token *token)
 	return (1);
 }
 
-int pipe_control(t_token *token)
+int	pipe_control(t_token *token)
 {
-	t_token *node;
+	t_token	*node;
 
 	node = token->next;
-	if (node != NULL && (node->rank == 1 || node->rank == 6 || node->rank == 5 || ft_lstlast(node)->rank != 4))
+	if (node != NULL && (node->rank == 1 || node->rank == 6 || node->rank == 5
+			|| ft_lstlast(node)->rank != 4))
 		return (printf("error, unexpected token\n"), 1);
 	while (node != NULL && node->next != NULL)
 	{
 		if (node->next && node->next->rank != 4)
 		{
-			if ((node->rank != 4 && node->rank != 1) || (node->next->next != NULL && node->next->next->rank != 4 && node->next->rank != 1))
+			if ((node->rank != 4 && node->rank != 1)
+				|| (node->next->next != NULL && node->next->next->rank != 4
+					&& node->next->rank != 1))
 				return (printf("error, unexpected token\n"), 1);
 			if (node->rank == 1 && node->next && node->next->rank == 1)
 				return (printf("error, near |\n"), 1);

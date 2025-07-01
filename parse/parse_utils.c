@@ -42,7 +42,7 @@ char	*find_helper(char *line, int *ptr_i, int *ptr_j)
 {
 	int		i;
 	int		j;
-	char *content;
+	char	*content;
 
 	i = *ptr_i;
 	j = *ptr_j;

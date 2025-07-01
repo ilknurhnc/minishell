@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-static void add_env(t_main *prog, char *key, char *value)
+static void	add_env(t_main *prog, char *key, char *value)
 {
-	t_env *new;
-	char *tmp;
+	t_env	*new;
+	char	*tmp;
 
 	new = a_lstnew(ft_strdup(key), ft_strdup(value));
 	if (ft_strlen(value) == 0)
@@ -26,11 +26,11 @@ static void add_env(t_main *prog, char *key, char *value)
 	new->full_str = ft_strjoin(tmp, ft_strdup(value));
 }
 
-void update_or_add_env(t_main *prog, char *key, char *value)
+void	update_or_add_env(t_main *prog, char *key, char *value)
 {
-	t_env *tmp;
-	char *tmp1;
-	char *tmp2;
+	t_env	*tmp;
+	char	*tmp1;
+	char	*tmp2;
 
 	tmp = prog->env;
 	while (tmp)
@@ -38,7 +38,7 @@ void update_or_add_env(t_main *prog, char *key, char *value)
 		if (ft_strcmp(tmp->before_eq, key) == 0)
 		{
 			if (ft_strlen(value) == 0)
-				return;
+				return ;
 			free(tmp->after_eq);
 			tmp->after_eq = ft_strdup(value);
 			free(tmp->full_str);
@@ -47,19 +47,19 @@ void update_or_add_env(t_main *prog, char *key, char *value)
 			tmp->full_str = tmp2;
 			tmp->control = 0;
 			fill_array(prog, ft_lstsize_env(prog->env));
-			return;
+			return ;
 		}
 		tmp = tmp->next;
 	}
 	add_env(prog, key, value);
 }
 
-int handle_export(t_main *prog, t_executor *node, int i)
+int	handle_export(t_main *prog, t_executor *node, int i)
 {
-	char *equal_pos;
-	char *key;
-	char *value;
-	int key_len;
+	char	*equal_pos;
+	char	*key;
+	char	*value;
+	int		key_len;
 
 	equal_pos = ft_strchr(node->argv[i], '=');
 	if (equal_pos)
@@ -72,11 +72,11 @@ int handle_export(t_main *prog, t_executor *node, int i)
 		i++;
 		free(value);
 		free(key);
-		return 1;
+		return (1);
 	}
 	else
 		update_or_add_env(prog, node->argv[i], "");
-	return 0;
+	return (0);
 }
 
 int	ft_export(t_executor *node)
@@ -97,13 +97,13 @@ int	ft_export(t_executor *node)
 		{
 			print_export_error(node->argv[i]);
 			i++;
-			return 1;
-			continue;
+			return (1);
+			continue ;
 		}
 		if (handle_export(prog, node, i) == 1)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		i++;
 	}

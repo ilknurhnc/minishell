@@ -12,26 +12,26 @@
 
 #include "../minishell.h"
 
-char *get_value_from_env(t_env *env, char *key)
+char	*get_value_from_env(t_env *env, char *key)
 {
 	while (env)
 	{
 		if (ft_strcmp(env->before_eq, key) == 0)
 		{
 			if (env->after_eq)
-				return env->after_eq;
+				return (env->after_eq);
 			else
-				return NULL;
+				return (NULL);
 		}
 		env = env->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
-char *dollar_handle(char *dollar, t_env *env)
+char	*dollar_handle(char *dollar, t_env *env)
 {
-	char *new_dollar;
-	char *new;
+	char	*new_dollar;
+	char	*new;
 
 	if (ft_strcmp(dollar, "0") == 0)
 	{
@@ -57,13 +57,13 @@ char *dollar_handle(char *dollar, t_env *env)
 	return (free(dollar), new);
 }
 
-char *find_dollar(char *content, int index, t_main *program)
+char	*find_dollar(char *content, int index, t_main *program)
 {
-	char *dollar;
-	char *str;
-	char *merge;
-	char *new;
-	int i;
+	char	*dollar;
+	char	*str;
+	char	*merge;
+	char	*new;
+	int		i;
 
 	i = index + 1;
 	if (content[i] == '?' || isdigit(content[i]))
@@ -85,13 +85,13 @@ char *find_dollar(char *content, int index, t_main *program)
 	return (merge);
 }
 
-void dollar_control(t_token *token)
+void	dollar_control(t_token *token)
 {
-	char *before_dollar;
-	char *after_dollar;
-	t_token *head;
-	int index;
-	int new;
+	char	*before_dollar;
+	char	*after_dollar;
+	t_token	*head;
+	int		index;
+	int		new;
 
 	head = token;
 	after_dollar = NULL;
@@ -107,7 +107,7 @@ void dollar_control(t_token *token)
 			free(token->content);
 			token->content = ft_strjoin(before_dollar, after_dollar);
 			if (ft_our_strchr(&token->content[index], 36) <= 0)
-				break;
+				break ;
 			index = ft_our_strchr(&token->content[index], 36) + new;
 		}
 		token = token->next;

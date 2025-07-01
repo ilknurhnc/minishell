@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-void free_env(t_main *program)
+void	free_env(t_main *program)
 {
-	t_env *node;
-	t_env *temp;
-	int i;
+	t_env	*node;
+	t_env	*temp;
+	int		i;
 
 	i = 0;
 	node = program->env;
@@ -41,14 +41,13 @@ void free_env(t_main *program)
 	}
 }
 
-void free_token(t_main *program)
+void	free_token(t_main *program)
 {
-	t_token *node;
-	t_token *temp;
+	t_token	*node;
+	t_token	*temp;
 
 	if (!program || !program->token)
-		return;
-
+		return ;
 	node = program->token;
 	while (node)
 	{
@@ -65,7 +64,7 @@ void free_token(t_main *program)
 	program->token = NULL;
 }
 
-void free_program(t_main *program, int key)
+void	free_program(t_main *program, int key)
 {
 	free_token(program);
 	if (key != 2)
@@ -76,7 +75,7 @@ void free_program(t_main *program, int key)
 		free_executer(program);
 }
 
-void main_free(t_main program, char *line, int key)
+void	main_free(t_main program, char *line, int key)
 {
 	if (line)
 		free(line);
@@ -88,7 +87,7 @@ void main_free(t_main program, char *line, int key)
 	free_program(&program, key);
 }
 
-void free_resources(t_main *program)
+void	free_resources(t_main *program)
 {
 	free_token(program);
 	free_exec(program);

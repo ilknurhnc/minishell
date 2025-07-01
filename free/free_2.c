@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-void free_exec(t_main *program)
+void	free_exec(t_main *program)
 {
-	t_exec *node;
-	t_exec *temp;
+	t_exec	*node;
+	t_exec	*temp;
 
 	node = program->exec;
 	while (node)
@@ -28,9 +28,11 @@ void free_exec(t_main *program)
 	program->token = NULL;
 }
 
-void free_executer_argv(t_main *program, int i)
+void	free_executer_argv(t_main *program, int i)
 {
-	int j = 0;
+	int	j;
+
+	j = 0;
 	if (program->executer[i]->argv)
 	{
 		while (program->executer[i]->argv[j])
@@ -44,7 +46,7 @@ void free_executer_argv(t_main *program, int i)
 	}
 }
 
-void free_executer_files(t_main *program, int i)
+void	free_executer_files(t_main *program, int i)
 {
 	if (program->executer[i]->infile)
 	{
@@ -68,9 +70,11 @@ void free_executer_files(t_main *program, int i)
 	}
 }
 
-void free_executer_heredoc(t_main *program, int i)
+void	free_executer_heredoc(t_main *program, int i)
 {
-	int k = 0;
+	int	k;
+
+	k = 0;
 	if (program->executer[i]->heredoc_delimiters)
 	{
 		while (program->executer[i]->heredoc_delimiters[k])
@@ -84,21 +88,22 @@ void free_executer_heredoc(t_main *program, int i)
 	}
 }
 
-void free_executer(t_main *program)
+void	free_executer(t_main *program)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!program || !program->executer)
-		return;
+		return ;
 	while (program->executer[i])
 	{
-		free_executer_argv(program, i);          // argv'yi serbest bırak
-		free_executer_files(program, i);         // Dosya ve hata mesajlarını serbest bırak
-		free_executer_heredoc(program, i);       // Heredoc delimiters'ı serbest bırak
-		free(program->executer[i]);              // `executer` öğesini serbest bırak
+		free_executer_argv(program, i);
+		free_executer_files(program, i);
+		free_executer_heredoc(program, i);
+		free(program->executer[i]);
 		program->executer[i] = NULL;
 		i++;
 	}
-	free(program->executer);                    // `executer` dizisini serbest bırak
+	free(program->executer);
 	program->executer = NULL;
 }

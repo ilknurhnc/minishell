@@ -75,8 +75,8 @@ static void	token_flags(char *line, t_token *new_token, int quote)
 	new_token->flag = quote;
 	if (*line == 32 || (*line >= 9 && *line <= 13))
 		new_token->space = 1;
-	else if (*(line) && *(line + 1) && (*(line + 1) == 32 || (*(line + 1) >= 9 && *(line + 1) <= 13))
-		&& (quote == 34 || quote == 39))
+	else if (*(line) && *(line + 1) && (*(line + 1) == 32 || (*(line + 1) >= 9
+				&& *(line + 1) <= 13)) && (quote == 34 || quote == 39))
 		new_token->space = 1;
 }
 

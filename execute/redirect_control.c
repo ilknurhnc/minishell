@@ -12,43 +12,43 @@
 
 #include "../minishell.h"
 
-int is_directory(const char *path)
+int	is_directory(const char *path)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (stat(path, &st) == -1)
-		return 0;      // Dosya yok veya hata
+		return (0); // Dosya yok veya hata
 	if (S_ISDIR(st.st_mode))
-		return 1;      // Klasör
-	return 0;          // Klasör değil
+		return (1); // Klasör
+	return (0);     // Klasör değil
 }
 
-void set_error_and_exit(char **dst, char *msg)
+void	set_error_and_exit(char **dst, char *msg)
 {
 	if (dst == NULL)
-		return;
+		return ;
 	if (*dst)
 		free(*dst);
 	*dst = ft_strdup(msg);
 	set_exit_status_code(1);
 }
 
-void check_redirect_access_input(const char *filename, t_executor *cmd)
+void	check_redirect_access_input(const char *filename, t_executor *cmd)
 {
 	if (is_directory(filename))
 	{
 		set_error_and_exit(&cmd->error, ": Is a directory");
-		return;
+		return ;
 	}
 	if (access(filename, F_OK) < 0)
 	{
 		set_error_and_exit(&cmd->error, ": No such file or directory");
-		return;
+		return ;
 	}
 	if (access(filename, R_OK) < 0)
 	{
 		set_error_and_exit(&cmd->error, ": Permission denied");
-		return;
+		return ;
 	}
 }
 
@@ -82,26 +82,26 @@ int	check_redirect_access(const char *filename, int rank, char **error)
 	return (0);
 }
 
-void check_redirect_file(t_executor *cmd, char *filename, int rank)
+void	check_redirect_file(t_executor *cmd, char *filename, int rank)
 {
 	if (rank == 2)
 	{
 		check_redirect_access_input(filename, cmd);
 		if (cmd->error)
-			return;
+			return ;
 		free(cmd->infile);
 		cmd->infile = ft_strdup(filename);
 	}
 	else if (rank == 6 || rank == 5)
 	{
 		if (check_redirect_access(filename, rank, &cmd->error) < 0)
-			return;
+			return ;
 		if (rank == 6)
 		{
 			free(cmd->outfile);
 			cmd->outfile = ft_strdup(filename);
 		}
-		else // rank == 5
+		else
 		{
 			free(cmd->append);
 			cmd->append = ft_strdup(filename);

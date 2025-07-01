@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void token_init(t_main *program)
+void	token_init(t_main *program)
 {
 	program->token = malloc(sizeof(t_token));
 	if (!program->token)
@@ -30,16 +30,17 @@ void token_init(t_main *program)
 	program->token->program = program;
 }
 
-void env_init(t_main *program, char **env)
+void	env_init(t_main *program, char **env)
 {
-	t_env *envp = NULL;
+	t_env	*envp;
 
+	envp = NULL;
 	get_env(&envp, env);
 	program->env = envp;
 	set_env(program, program->env);
 }
 
-void exec_init(t_main *program)
+void	exec_init(t_main *program)
 {
 	program->exec = malloc(sizeof(t_exec));
 	if (!program->exec)
@@ -53,7 +54,7 @@ void exec_init(t_main *program)
 	program->exec->program = program;
 }
 
-void ft_init(t_main *program)
+void	ft_init(t_main *program)
 {
 	program->control = 0;
 	program->exit_status = 0;

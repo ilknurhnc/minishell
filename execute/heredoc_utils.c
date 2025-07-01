@@ -28,7 +28,7 @@ void	do_heredoc_write(char *delimiter, int write_fd, t_main *program)
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
@@ -36,27 +36,27 @@ void	do_heredoc_write(char *delimiter, int write_fd, t_main *program)
 	}
 }
 
-void heredoc_child(t_executor *cmd, t_main *program, int pipefd[2])
+void	heredoc_child(t_executor *cmd, t_main *program, int pipefd[2])
 {
-	static char str[10000];
-	int i;
-	
+	static char	str[10000];
+	int			i;
+
 	i = -1;
 	signal(SIGINT, signal_handler);
 	while (cmd->heredoc_delimiters[0][++i])
 		str[i] = cmd->heredoc_delimiters[0][i];
 	g_signal_exit = 1;
-	free_resources(program); 
+	free_resources(program);
 	close(pipefd[0]);
 	do_heredoc_write(str, pipefd[1], program);
 	close(pipefd[1]);
 	exit(0);
 }
 
-void heredoc_parent(t_executor *cmd, int pipefd[2], pid_t pid)
+void	heredoc_parent(t_executor *cmd, int pipefd[2], pid_t pid)
 {
-	int		status;
-	
+	int	status;
+
 	g_signal_exit = 2;
 	signal(SIGINT, signal_handler);
 	close(pipefd[1]);

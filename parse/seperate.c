@@ -12,11 +12,13 @@
 
 #include "../minishell.h"
 
-static void seperate_two_helper(t_token *token, t_token *temp, char *content, int len)
+static void	seperate_two_helper(t_token *token, t_token *temp, char *content,
+		int len)
 {
-	t_token *new;
+	t_token	*new;
 
-	new = ft_lstnew(ft_substr(token->content, len, ft_strlen(token->content) - len));
+	new = ft_lstnew(ft_substr(token->content, len, ft_strlen(token->content)
+				- len));
 	token->next = new;
 	new->next = temp;
 	free(token->content);
@@ -25,12 +27,12 @@ static void seperate_two_helper(t_token *token, t_token *temp, char *content, in
 	token->space = 0;
 }
 
-void separate_two(t_token *token, char *content, int len, int location)
+void	separate_two(t_token *token, char *content, int len, int location)
 {
-	t_token *temp;
-	t_token *new;
-	char *str;
-	char *tmp;
+	t_token	*temp;
+	t_token	*new;
+	char	*str;
+	char	*tmp;
 
 	temp = token->next;
 	if (location == 0)
@@ -117,4 +119,3 @@ void	new_func(t_token *temp)
 	if (temp->content != NULL && ft_strchr(temp->content, '|'))
 		arrange_tokens(temp, "|", 1);
 }
-

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void set_heredoc(t_exec *current, t_executor *cmd, int i)
+void	set_heredoc(t_exec *current, t_executor *cmd, int i)
 {
 	if (current && current->next)
 	{
@@ -30,9 +30,9 @@ void set_heredoc(t_exec *current, t_executor *cmd, int i)
 	}
 }
 
-void set_redirect(t_exec *current, t_executor *cmd)
+void	set_redirect(t_exec *current, t_executor *cmd)
 {
-	char *filename;
+	char	*filename;
 
 	while (current && current->next && current->rank != 1 && current->rank != 4)
 	{
@@ -41,9 +41,10 @@ void set_redirect(t_exec *current, t_executor *cmd)
 		current = current->next->next;
 		free(filename);
 		if (cmd->error != NULL)
-			return;
+			return ;
 	}
 }
+
 void	open_and_redirect(const char *file, int flags, int fd_target)
 {
 	int	fd;
@@ -63,15 +64,17 @@ void	redirect_handle(t_executor *node)
 	if (node->infile)
 		open_and_redirect(node->infile, O_RDONLY, STDIN_FILENO);
 	if (node->outfile)
-		open_and_redirect(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, STDOUT_FILENO);
+		open_and_redirect(node->outfile, O_WRONLY | O_CREAT | O_TRUNC,
+			STDOUT_FILENO);
 	if (node->append)
-		open_and_redirect(node->append, O_WRONLY | O_CREAT | O_APPEND, STDOUT_FILENO);
+		open_and_redirect(node->append, O_WRONLY | O_CREAT | O_APPEND,
+			STDOUT_FILENO);
 }
 
-void free_heredoc_delimiters(t_executor *cmd)
+void	free_heredoc_delimiters(t_executor *cmd)
 {
 	if (!cmd->heredoc_delimiters)
-		return;
+		return ;
 	for (int i = 0; i < 10; i++)
 		free(cmd->heredoc_delimiters[i]);
 	free(cmd->heredoc_delimiters);
@@ -116,5 +119,3 @@ void free_heredoc_delimiters(t_executor *cmd)
 // 		close(fd);
 // 	}
 // }
-
-

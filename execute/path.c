@@ -79,7 +79,8 @@ char	*is_executable_path(char *command)
 		if (access(command, X_OK) == 0)
 			return (ft_strdup(command));
 	}
-	else if (command[0] == '.' && (command[1] == '/' || (command[1] == '.' && command[2] == '/')))
+	else if (command[0] == '.' && (command[1] == '/' || (command[1] == '.'
+				&& command[2] == '/')))
 	{
 		if (access(command, X_OK) == 0)
 			return (ft_strdup(command));

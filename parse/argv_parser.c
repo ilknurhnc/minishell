@@ -14,7 +14,7 @@
 
 int	design_argv(t_executor **node, t_exec *current, int i)
 {
-	int		h_count;
+	int	h_count;
 
 	h_count = 0;
 	if (current && current->rank == 3)
@@ -62,7 +62,7 @@ t_exec	*set_argv(t_executor **node, t_exec *start, int i)
 		}
 		current = current->next;
 	}
-	if(current && current->rank == 1)
+	if (current && current->rank == 1)
 		current = current->next;
 	node[i]->argv[j] = NULL;
 	return (current);

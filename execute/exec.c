@@ -16,7 +16,7 @@ void	single_built_in(t_executor *current)
 {
 	int	saved_stdin;
 	int	saved_stdout;
-	int builtin_status;
+	int	builtin_status;
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
@@ -27,34 +27,34 @@ void	single_built_in(t_executor *current)
 		close(current->heredoc_file);
 	}
 	builtin_status = execute_builtin(current);
-	set_exit_status_code(builtin_status);  
+	set_exit_status_code(builtin_status);
 	dup2(saved_stdout, STDOUT_FILENO);
 	dup2(saved_stdin, STDIN_FILENO);
 	close(saved_stdout);
 	close(saved_stdin);
 }
 
-void is_executable(char *cmd, t_main *program)
+void	is_executable(char *cmd, t_main *program)
 {
-    char *executable;
+	char	*executable;
 
-    if (ft_strnstr(cmd, "./", 2) == NULL)
-        return;
-    executable = ft_strnstr(cmd, "./", 2);
-    if (access(executable, F_OK) < 0)
-    {
-        printf("%s: No such file or directory\n", executable);
-        set_exit_status_code(127);
-        free_resources(program);
-        exit(127);
-    }
-    if (access(executable, X_OK) < 0)
-    {
-        printf("%s: Permission denied\n", executable);
-        set_exit_status_code(126);
-        free_resources(program);
-        exit(126);
-    }
+	if (ft_strnstr(cmd, "./", 2) == NULL)
+		return ;
+	executable = ft_strnstr(cmd, "./", 2);
+	if (access(executable, F_OK) < 0)
+	{
+		printf("%s: No such file or directory\n", executable);
+		set_exit_status_code(127);
+		free_resources(program);
+		exit(127);
+	}
+	if (access(executable, X_OK) < 0)
+	{
+		printf("%s: Permission denied\n", executable);
+		set_exit_status_code(126);
+		free_resources(program);
+		exit(126);
+	}
 }
 
 void	run_execve(t_executor *node, int input_fd, int output_fd)
@@ -71,7 +71,7 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 		dup2(output_fd, STDOUT_FILENO);
 		close(output_fd);
 	}
-    is_executable(node->argv[0], node->program);
+	is_executable(node->argv[0], node->program);
 	cmd_path = find_command_path(node->program, node->argv[0]);
 	if (!cmd_path)
 	{
@@ -86,28 +86,30 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 	exit(1);
 }
 
-void main_execute(t_executor *exec, int prev_fd)
+void	main_execute(t_executor *exec, int prev_fd)
 {
-    int pipefds[2];
-    int output_fd;
-    t_executor *current;
-    pid_t last_pid = -1;
-    int last_status = 0;
+	int			pipefds[2];
+	int			output_fd;
+	t_executor	*current;
+	pid_t		last_pid;
+	int			last_status;
 
-    current = exec;
-    while (current)
-    {
-        output_fd = STDOUT_FILENO;
-        if (current->heredoc_delimiters && current->heredoc_delimiters[0])
-            handle_heredoc(current, current->program);
-        set_fork(current, pipefds, &output_fd, prev_fd);
-        if (current->next)
-            prev_fd = pipefds[0];
-        else
-            prev_fd = STDIN_FILENO;
-        current = current->next;
-    }
-    wait_child(&last_pid, &last_status);
-    if (last_pid != -1)
-        set_exit_status_code(last_status);
+	last_pid = -1;
+	last_status = 0;
+	current = exec;
+	while (current)
+	{
+		output_fd = STDOUT_FILENO;
+		if (current->heredoc_delimiters && current->heredoc_delimiters[0])
+			handle_heredoc(current, current->program);
+		set_fork(current, pipefds, &output_fd, prev_fd);
+		if (current->next)
+			prev_fd = pipefds[0];
+		else
+			prev_fd = STDIN_FILENO;
+		current = current->next;
+	}
+	wait_child(&last_pid, &last_status);
+	if (last_pid != -1)
+		set_exit_status_code(last_status);
 }

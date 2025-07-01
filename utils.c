@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-//libft
+
+// libft
 size_t	ft_strlen(char *s)
 {
 	int	i;
@@ -22,7 +23,7 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
-int 	ft_strstr(char *str, char *to_find)
+int	ft_strstr(char *str, char *to_find)
 {
 	int	i;
 	int	j;
@@ -42,7 +43,7 @@ int 	ft_strstr(char *str, char *to_find)
 	}
 	return (-1);
 }
-//libft
+// libft
 char	*ft_strdup(char *s1)
 {
 	char	*d;
@@ -61,7 +62,7 @@ char	*ft_strdup(char *s1)
 	*d = '\0';
 	return ((char *)(d - slen));
 }
-//libft
+// libft
 size_t	ft_strlcpy(char *dest, char *src, size_t destsize)
 {
 	size_t	i;
@@ -97,7 +98,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	ft_strlcpy(d, s + start, len + 1);
 	return ((char *)d);
 }
-//libft
+// libft
 size_t	count_word(char *p, char c)
 {
 	size_t	i;
@@ -119,7 +120,7 @@ size_t	count_word(char *p, char c)
 	return (len);
 }
 
- size_t	check(char **list, size_t count)
+size_t	check(char **list, size_t count)
 {
 	if (!list[count])
 	{
@@ -133,8 +134,8 @@ size_t	count_word(char *p, char c)
 
 char	**ft_split(char *s, char c)
 {
-	char		**list;
-	size_t		count;
+	char	**list;
+	size_t	count;
 	char	*begin;
 
 	count = 0;
@@ -170,22 +171,23 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	ft_our_strchr( char *s, int c)
+int	ft_our_strchr(char *s, int c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	c = (char)c;
 	while (s[i] != '\0')
 	{
-		if (s[i] == c && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i + 1] == '_'))
+		if (s[i] == c && (ft_isalnum(s[i + 1]) || s[i + 1] == '?' || s[i
+				+ 1] == '_'))
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-int 	of_strchr(const char *s, int c)
+int	of_strchr(const char *s, int c)
 {
 	int	i;
 
@@ -235,8 +237,8 @@ char	*ft_strtrim(char *s1, char *set)
 
 char	*my_join(char *line, char *s1, char *s2)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	if (!s1)
 	{
@@ -257,9 +259,9 @@ char	*my_join(char *line, char *s1, char *s2)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	char *str;
-	int i;
-	int j;
+	char	*str;
+	int		i;
+	int		j;
 
 	if (!s1)
 	{
@@ -280,7 +282,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s2);
 	return (str);
 }
-//libft
+// libft
 int	ft_isdigit(int c)
 {
 	if (c >= 48 && c <= 57)
@@ -289,7 +291,7 @@ int	ft_isdigit(int c)
 	}
 	return (0);
 }
-//libft
+// libft
 int	ft_isalpha(int c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
@@ -298,10 +300,10 @@ int	ft_isalpha(int c)
 	}
 	return (0);
 }
-//libft
+// libft
 int	ft_isalnum(int c)
 {
-	if(c == 0)
+	if (c == 0)
 		return (0);
 	return (ft_isalpha(c) || ft_isdigit(c));
 }
@@ -330,7 +332,7 @@ t_token	*ft_lstlast(t_token *lst)
 	return (lst);
 }
 
-void	ft_lstdelone(t_token *lst, void (*del)(void*))
+void	ft_lstdelone(t_token *lst, void (*del)(void *))
 {
 	if (!del)
 		return ;
@@ -343,12 +345,12 @@ void	ft_lstdelone(t_token *lst, void (*del)(void*))
 
 void	ft_lstadd(t_token *node, t_token *new)
 {
-    t_token *temp;
+	t_token	*temp;
 
-    if (!node || !new )
-        return;
-    temp = node->next;
-    node->next = new;
+	if (!node || !new)
+		return ;
+	temp = node->next;
+	node->next = new;
 	new->next = temp;
 }
 
@@ -380,21 +382,21 @@ t_env	*a_lstnew(char *before, char *after)
 	return (new);
 }
 
-void ft_envadd_back(t_env **lst, t_env *new)
+void	ft_envadd_back(t_env **lst, t_env *new)
 {
-    t_env *temp;
+	t_env	*temp;
 
-    if (!lst || !new)
-        return ;
-    if (!*lst)
-    {
-        *lst = new;
-        return ;
-    }
-    temp = *lst;
-    while (temp->next)
-        temp = temp->next;
-    temp->next = new;
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	temp = *lst;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
 }
 
 t_exec	*ft_lstnew_exec(void *content)
@@ -411,21 +413,21 @@ t_exec	*ft_lstnew_exec(void *content)
 	return (node);
 }
 
-void ft_execadd_back(t_exec **lst, t_exec *new)
+void	ft_execadd_back(t_exec **lst, t_exec *new)
 {
-    t_exec *temp;
+	t_exec	*temp;
 
-    if (!lst || !new)
-        return ;
-    if (!*lst)
-    {
-        *lst = new;
-        return ;
-    }
-    temp = *lst;
-    while (temp->next)
-        temp = temp->next;
-    temp->next = new;
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	temp = *lst;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
 }
 
 int	space_control(char *s)
@@ -443,7 +445,7 @@ int	space_control(char *s)
 	}
 	return (0);
 }
-//libft
+// libft
 int	ft_atoi(const char *str)
 {
 	int	sign;
@@ -468,7 +470,7 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * result);
 }
-//libft
+// libft
 static int	bas_num(long n)
 {
 	int	digit_num;
@@ -488,7 +490,7 @@ static int	bas_num(long n)
 	}
 	return (digit_num);
 }
-//libft
+// libft
 char	*ft_itoa(int n)
 {
 	int		digit_num;
@@ -516,7 +518,7 @@ char	*ft_itoa(int n)
 	return (s);
 }
 
-char	*ft_strcat(char	*dest, const char	*src)
+char	*ft_strcat(char *dest, const char *src)
 {
 	int	i;
 	int	j;
@@ -529,7 +531,7 @@ char	*ft_strcat(char	*dest, const char	*src)
 	}
 	while (src[j] != '\0')
 	{
-		dest[i] = src [j];
+		dest[i] = src[j];
 		i++;
 		j++;
 	}
@@ -568,11 +570,11 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 	}
 	return (dest);
 }
-//libft
+// libft
 char	*ft_strnstr(const char *src, const char *to_find, size_t n)
 {
-	size_t	j;
-	size_t	i;
+	size_t j;
+	size_t i;
 
 	i = 0;
 	j = 0;

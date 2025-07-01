@@ -14,7 +14,7 @@
 
 int		g_signal_exit = 0;
 
-void	signal_handler()
+void	signal_handler(void)
 {
 	if (g_signal_exit == 0 || g_signal_exit == 130)
 	{

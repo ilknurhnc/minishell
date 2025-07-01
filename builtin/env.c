@@ -110,9 +110,11 @@ int	ft_env(t_executor *exec_node)
 		return (env_print_error("env: No such file or directory", 127));
 	prog = exec_node->program;
 	if (!prog || !prog->env)
-		return (env_print_error("minishell: env: internal error (no environment)", 1));
+		return (env_print_error("minishell: env: internal error-no environment",
+				1));
 	if (!get_env_value(prog->env, "PATH"))
-		return (env_print_error("minishell: env: No such file or directory", 127));
+		return (env_print_error("minishell: env: No such file or directory",
+				127));
 	tmp = prog->env;
 	while (tmp)
 	{
