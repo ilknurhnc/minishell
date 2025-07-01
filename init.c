@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/04 11:20:56 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/30 21:12:58 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	token_init(t_main *program)
+void token_init(t_main *program)
 {
 	program->token = malloc(sizeof(t_token));
 	if (!program->token)
@@ -32,11 +32,11 @@ void	token_init(t_main *program)
 
 void env_init(t_main *program, char **env)
 {
-    t_env *envp = NULL;
+	t_env *envp = NULL;
 
-    get_env(&envp, env);
-    program->env = envp;
-    set_env(program, program->env);
+	get_env(&envp, env);
+	program->env = envp;
+	set_env(program, program->env);
 }
 
 void exec_init(t_main *program)
@@ -53,11 +53,10 @@ void exec_init(t_main *program)
 	program->exec->program = program;
 }
 
-void	ft_init(t_main *program)
+void ft_init(t_main *program)
 {
 	program->control = 0;
 	program->exit_status = 0;
 	token_init(program);
 	exec_init(program);
 }
-

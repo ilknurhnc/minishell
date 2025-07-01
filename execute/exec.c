@@ -1,58 +1,5 @@
 #include "../minishell.h"
 
-int	design_argv(t_executor **node, t_exec *current, int i)
-{
-	int	h_count;
-
-	h_count = 0;
-	if (current && current->rank == 3)
-	{
-		set_heredoc(current, node[i], h_count);
-		h_count++;
-		if (!node[i]->heredoc_delimiters)
-		{
-			node[i]->heredoc_delimiters = malloc(sizeof(char *) * 100);
-			if (!node[i]->heredoc_delimiters)
-				exit(1); // DÜZELT
-		}
-		node[i]->heredoc_delimiters[h_count] = NULL;
-		return (1);
-	}
-	if (current && current->rank != 4 && current->rank != 1)
-	{
-		set_redirect(current, node[i]);
-		return (1);
-	}
-	return (0);
-}
-
-t_exec	*set_argv(t_executor **node, t_exec *start, int i)
-{
-	t_exec	*current;
-	int		j;
-
-	current = start;
-	j = 0;
-	node[i]->argv = malloc(sizeof(char *) * 100);
-	if (!node[i]->argv)
-		return (NULL);
-	while (current && current->rank && current->rank != 1)
-	{
-		if (current->rank == 4 && current->content)
-			node[i]->argv[j++] = ft_strdup(current->content);
-		if (design_argv(node, current, i) == 1)
-		{
-			current = current->next->next;
-			continue ;
-		}
-		current = current->next;
-	}
-	if(current && current->rank == 1)
-		current = current->next;
-	node[i]->argv[j] = NULL;
-	return (current);
-}
-
 void is_executable(char *cmd, t_main *program)
 {
     char *executable;
@@ -127,51 +74,56 @@ void	single_built_in(t_executor *current)
 	close(saved_stdout);
 	close(saved_stdin);
 }
-
-void	child_process(t_executor *current, int *pipefds, int output_fd,
-		int prev_fd)
+void manage_io(t_executor *current, int *pipefds, int output_fd, int prev_fd)
 {
-	int code;
-	
-	if (current->next)
-		close(pipefds[0]);
-	if (current->heredoc_file != -1)
-	{
-		dup2(current->heredoc_file, STDIN_FILENO);
-		close(current->heredoc_file);
-	}
-	else if (prev_fd != STDIN_FILENO)
-	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
-	}
-	if (output_fd != STDOUT_FILENO)
-	{
-		dup2(output_fd, STDOUT_FILENO);
-		close(output_fd);
-	}
+    if (current->next)
+        close(pipefds[0]);
+
+    if (current->heredoc_file != -1)
+    {
+        dup2(current->heredoc_file, STDIN_FILENO);
+        close(current->heredoc_file);
+    }
+    else if (prev_fd != STDIN_FILENO)
+    {
+        dup2(prev_fd, STDIN_FILENO);
+        close(prev_fd);
+    }
+
+    if (output_fd != STDOUT_FILENO)
+    {
+        dup2(output_fd, STDOUT_FILENO);
+        close(output_fd);
+    }
 	redirect_handle(current);
-	if (current->error || !current->argv[0])
-	{
-		if (current->error)
-		{
-			write(2, "minishell: ", 11);
-			write(2, current->error, ft_strlen(current->error));
-			write(2, "\n", 1);
-		}
-		set_exit_status_code(1);
-		free_resources(current->program);
-		exit(1);
-	}
-	if (is_builtin_command(current->argv[0]))
-	{		
-		code = execute_builtin(current);
-		free_resources(current->program);
-		set_exit_status_code(1);
-		exit(code);
-	}	
-	else
-		run_execve(current, STDIN_FILENO, STDOUT_FILENO);
+}
+
+void child_process(t_executor *current, int *pipefds, int output_fd, int prev_fd)
+{
+    int code;
+
+    manage_io(current, pipefds, output_fd, prev_fd);  // Yönlendirme işlemleri
+    if (current->error || !current->argv[0])
+    {
+        if (current->error)
+        {
+            write(2, "minishell: ", 11);
+            write(2, current->error, ft_strlen(current->error));
+            write(2, "\n", 1);
+        }
+        set_exit_status_code(1);
+        free_resources(current->program);
+        exit(1);
+    }
+    if (is_builtin_command(current->argv[0]))
+    {
+        code = execute_builtin(current);
+        free_resources(current->program);
+        set_exit_status_code(1);
+        exit(code);
+    }
+    else
+        run_execve(current, STDIN_FILENO, STDOUT_FILENO);
 }
 
 void	ft_fork(t_executor *current, int *pipefds, int output_fd, int prev_fd)
@@ -201,99 +153,158 @@ void	ft_fork(t_executor *current, int *pipefds, int output_fd, int prev_fd)
 		close(pipefds[1]);
 }
 
-void	main_execute(t_executor *exec, int prev_fd)
+
+void setup_pipe_and_fork(t_executor *current, int *pipefds, int *output_fd, int prev_fd)
 {
-	int			pipefds[2];
-	int			output_fd;
-	t_executor	*current;
-	int			status;
-	pid_t		pid;
-		pid_t		last_pid = -1;
-	int			last_status = 0;
+    if (current->next)
+    {
+        if (pipe(pipefds) == -1)
+        {
+            perror("pipe failed");
+            free_resources(current->program);
+            exit(1);
+        }
+        *output_fd = pipefds[1];
+    }
+    ft_fork(current, pipefds, *output_fd, prev_fd);
+    if (prev_fd != STDIN_FILENO)
+        close(prev_fd);
+}
+
+void wait_for_children(pid_t *last_pid, int *last_status)
+{
+    pid_t pid;
+    int status;
+    while ((pid = wait(&status)) > 0)
+    {
+        if (WIFEXITED(status))
+            *last_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            *last_status = 128 + WTERMSIG(status);
+        *last_pid = pid;
+    }
+}
+
+void main_execute(t_executor *exec, int prev_fd)
+{
+    int pipefds[2];
+    int output_fd;
+    t_executor *current;
+    pid_t last_pid = -1;
+    int last_status = 0;
+
+    current = exec;
+    while (current)
+    {
+        output_fd = STDOUT_FILENO;
+        if (current->heredoc_delimiters && current->heredoc_delimiters[0])
+            handle_heredoc(current, current->program);
+        setup_pipe_and_fork(current, pipefds, &output_fd, prev_fd);
+        if (current->next)
+            prev_fd = pipefds[0];
+        else
+            prev_fd = STDIN_FILENO;
+        current = current->next;
+    }
+    wait_for_children(&last_pid, &last_status);
+    if (last_pid != -1)
+        set_exit_status_code(last_status);
+}
+
+
+
+
+// void	main_execute(t_executor *exec, int prev_fd)
+// {
+// 	int			pipefds[2];
+// 	int			output_fd;
+// 	t_executor	*current;
+// 	int			status;
+// 	pid_t		pid;
+// 		pid_t		last_pid = -1;
+// 	int			last_status = 0;
 	
-	current = exec;
-	while (current)
-	{
-		output_fd = STDOUT_FILENO;
-		if (current->heredoc_delimiters && current->heredoc_delimiters[0])
-			handle_heredoc(current, current->program);
-		if (current->next)
-		{
-			if (pipe(pipefds) == -1)
-			{
-				perror("pipe failed");
-				free_resources(current->program);
-				exit(1);
-			}
-			output_fd = pipefds[1];
-		}
-		ft_fork(current, pipefds, output_fd, prev_fd);
-		if (prev_fd != STDIN_FILENO)
-			close(prev_fd);
-		if (current->next)
-			prev_fd = pipefds[0];
-		else
-			prev_fd = STDIN_FILENO;
-		current = current->next;
-	}
-	while ((pid = wait(&status)) > 0)
-	{
-		if (WIFEXITED(status))
-			last_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			last_status = 128 + WTERMSIG(status);
-		last_pid = pid;
-	}
-	if (last_pid != -1)
-		set_exit_status_code(last_status);
-}
+// 	current = exec;
+// 	while (current)
+// 	{
+// 		output_fd = STDOUT_FILENO;
+// 		if (current->heredoc_delimiters && current->heredoc_delimiters[0])
+// 			handle_heredoc(current, current->program);
+// 		if (current->next)
+// 		{
+// 			if (pipe(pipefds) == -1)
+// 			{
+// 				perror("pipe failed");
+// 				free_resources(current->program);
+// 				exit(1);
+// 			}
+// 			output_fd = pipefds[1];
+// 		}
+// 		ft_fork(current, pipefds, output_fd, prev_fd);
+// 		if (prev_fd != STDIN_FILENO)
+// 			close(prev_fd);
+// 		if (current->next)
+// 			prev_fd = pipefds[0];
+// 		else
+// 			prev_fd = STDIN_FILENO;
+// 		current = current->next;
+// 	}
+// 	while ((pid = wait(&status)) > 0)
+// 	{
+// 		if (WIFEXITED(status))
+// 			last_status = WEXITSTATUS(status);
+// 		else if (WIFSIGNALED(status))
+// 			last_status = 128 + WTERMSIG(status);
+// 		last_pid = pid;
+// 	}
+// 	if (last_pid != -1)
+// 		set_exit_status_code(last_status);
+// }
 
-void	init_exec(t_main *program, t_executor **node, int count)
-{
-	node[count] = malloc(sizeof(t_executor));
-	if (!node[count])
-	{
-		while (--count >= 0)
-			free(node[count]);
-		free_executer(program);
-		return ;
-	}
-	node[count]->infile = NULL;
-	node[count]->outfile = NULL;
-	node[count]->heredoc_file = -1;
-	node[count]->append = NULL;
-	node[count]->pipe = program->exec->pipe;
-	node[count]->heredoc_delimiters = NULL;
-	node[count]->program = program;
-	node[count]->error = NULL;
-	if (count > 0)
-		node[count - 1]->next = node[count];
-	node[count]->next = NULL;
-}
+// void	child_process(t_executor *current, int *pipefds, int output_fd,
+// 		int prev_fd)
+// {
+// 	int code;
+	
+// 	if (current->next)
+// 		close(pipefds[0]);
+// 	if (current->heredoc_file != -1)
+// 	{
+// 		dup2(current->heredoc_file, STDIN_FILENO);
+// 		close(current->heredoc_file);
+// 	}
+// 	else if (prev_fd != STDIN_FILENO)
+// 	{
+// 		dup2(prev_fd, STDIN_FILENO);
+// 		close(prev_fd);
+// 	}
+// 	if (output_fd != STDOUT_FILENO)
+// 	{
+// 		dup2(output_fd, STDOUT_FILENO);
+// 		close(output_fd);
+// 	}
+// 	redirect_handle(current);
+// 	if (current->error || !current->argv[0])
+// 	{
+// 		if (current->error)
+// 		{
+// 			write(2, "minishell: ", 11);
+// 			write(2, current->error, ft_strlen(current->error));
+// 			write(2, "\n", 1);
+// 		}
+// 		set_exit_status_code(1);
+// 		free_resources(current->program);
+// 		exit(1);
+// 	}
+// 	if (is_builtin_command(current->argv[0]))
+// 	{		
+// 		code = execute_builtin(current);
+// 		free_resources(current->program);
+// 		set_exit_status_code(1);
+// 		exit(code);
+// 	}	
+// 	else
+// 		run_execve(current, STDIN_FILENO, STDOUT_FILENO);
+// }
 
-void	prep_exec(t_main *program)
-{
-	t_exec		*current;
-	t_executor	**node;
-	int			i;
-	int			count;
 
-	current = program->exec;
-	count = 0;
-	setting_sign(program);
-	pipe_count(program->exec);
-	i = program->exec->pipe + 1;
-	node = malloc(sizeof(t_executor *) * (i + 1));
-	if (!node)
-		return ;
-	while (count < i)
-	{
-		init_exec(program, node, count);
-		current = set_argv(node, current, count);
-		count++;
-	}
-	node[count] = NULL;
-	program->executer = node;
-	program->control = 1;
-	main_execute(node[0], STDIN_FILENO);
-}

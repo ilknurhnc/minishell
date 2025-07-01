@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 09:21:49 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/27 16:02:20 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/30 21:30:59 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,6 @@ void	set_env(t_main *program, t_env *env)
 		temp = temp->next;
 	}
 	fill_array(program, i);
-}
-
-int	env_print_error(char *msg, int code)
-{
-	printf("%s\n", msg);
-	return (code);
 }
 
 int	ft_env(t_executor *exec_node)

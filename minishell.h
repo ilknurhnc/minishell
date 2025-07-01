@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-extern int	g_signal_exit;
+extern int g_signal_exit;
 
 typedef struct s_token t_token;
 typedef struct s_env t_env;
@@ -62,8 +62,8 @@ typedef struct s_executor
 	char **argv;
 	char *outfile;
 	char *infile;
-	int				heredoc_file;
-	char				**heredoc_delimiters;
+	int heredoc_file;
+	char **heredoc_delimiters;
 	char *append;
 	char *error;
 	int pipe;
@@ -100,7 +100,7 @@ char *my_join(char *line, char *s1, char *s2);
 size_t ft_strlcpy(char *dest, char *src, size_t destsize);
 char *ft_strdup(char *s1);
 int ft_isalnum(int c);
-int	ft_isalpha(int c);
+int ft_isalpha(int c);
 int ft_strcmp(char *s1, char *s2);
 int ft_strstr(char *str, char *to_find);
 void ft_lstadd(t_token *node, t_token *new);
@@ -113,27 +113,31 @@ size_t count_word(char *p, char c);
 size_t check(char **list, size_t count);
 void exec_init(t_main *program);
 int space_control(char *s);
-int	ft_atoi(const char *str);
-char	*ft_itoa(int num);
-char	*ft_strcat(char	*dest, const char	*src);
-char	*ft_strcpy(char *dest, char *src);
-char	*ft_strncpy(char *dest, char *src, unsigned int n);
-char	*ft_strnstr(const char *src, const char *to_find, size_t n);
+int ft_atoi(const char *str);
+char *ft_itoa(int num);
+char *ft_strcat(char *dest, const char *src);
+char *ft_strcpy(char *dest, char *src);
+char *ft_strncpy(char *dest, char *src, unsigned int n);
+char *ft_strnstr(const char *src, const char *to_find, size_t n);
 
 // signal
 void signal_init(void);
 void signal_handler(int signal);
-int	*get_exit_status_code(void);
-void	set_exit_status_code(int status);
+int *get_exit_status_code(void);
+void set_exit_status_code(int status);
 
-// quotes
+// parse
 char *empty_quotes(char *line);
 int find_quotes(char *line, int *ptr_i, int *ptr_j);
 void tokenize_args(char *line, t_token **token);
+int	design_argv(t_executor **node, t_exec *current, int i);
+void prep_exec(t_main *program);
+t_exec *set_argv(t_executor **node, t_exec *start, int i);
 
 // init
 void token_init(t_main *program);
 void ft_init(t_main *program);
+void	init_exec(t_main *program, t_executor **node, int count);
 
 // dollar
 void dollar_control(t_token *token);
@@ -152,11 +156,11 @@ void print_token(t_token *list);
 void set_env(t_main *program, t_env *env);
 void get_env(t_env **envp, char **env);
 void print_env_array(t_main *program);
-void	fill_array(t_main *program, int i);
-int	ft_lstsize_env(t_env *env);
-void	update_or_add_env(t_main *prog, char *key, char *value);
-char	*get_env_value(t_env *env, char *key);
-int	ft_env(t_executor *exec_node);
+void fill_array(t_main *program, int i);
+int ft_lstsize_env(t_env *env);
+void update_or_add_env(t_main *prog, char *key, char *value);
+char *get_env_value(t_env *env, char *key);
+int ft_env(t_executor *exec_node);
 
 // free
 void free_program(t_main *program, int key);
@@ -168,38 +172,42 @@ void free_token(t_main *program);
 
 void setting_str(t_main *program);
 void setting_sign(t_main *program);
-void	free_executer(t_main *program);
-void	free_resources(t_main *program);
+void free_executer(t_main *program);
+void free_resources(t_main *program);
 
 // exec
+void	main_execute(t_executor *exec, int prev_fd);
 
-void prep_exec(t_main *program);
-t_exec *set_argv(t_executor **node, t_exec *start, int i);
+// redirect
+void set_heredoc(t_exec *current, t_executor *cmd, int i);
+//char *is_directory(const char *path);
+int is_directory(const char *path);
 
-//redirect
-void	set_heredoc(t_exec *current, t_executor *cmd, int i);
-char	*is_directory(const char *path);
-void	check_redirect_access_input(const char *filename, t_executor *cmd);
-int	check_redirect_access(const char *filename, int rank, char **error);
-void	check_redirect_file(t_executor *cmd, char *filename, int rank);
-void	set_redirect(t_exec *current, t_executor *cmd);
-void	redirect_handle(t_executor *node);
+void check_redirect_access_input(const char *filename, t_executor *cmd);
+int check_redirect_access(const char *filename, int rank, char **error);
+void check_redirect_file(t_executor *cmd, char *filename, int rank);
+void set_redirect(t_exec *current, t_executor *cmd);
+void redirect_handle(t_executor *node);
 
-//builtin
+// builtin
 int is_builtin_command(char *cmd);
 int execute_builtin(t_executor *cmd);
-void	env_init(t_main *program, char **env);
-int	ft_export(t_executor *node);
-int	ft_unset(t_executor *node);
-int	ft_cd(t_executor *node);
-int	ft_exit(t_executor *cmd);
+void env_init(t_main *program, char **env);
+int ft_export(t_executor *node);
+int ft_unset(t_executor *node);
+int ft_cd(t_executor *node);
+int ft_exit(t_executor *cmd);
+void print_export_error(char *arg);
+int is_valid_identifier(char *str);
+void print_export_format(t_env *env);
+int	env_print_error(char *msg, int code);
 
-//heredoc_utils
-void	do_heredoc_write(char *delimiter, int write_fd, t_main *program);
+// heredoc_utils
+void do_heredoc_write(char *delimiter, int write_fd, t_main *program);
 void heredoc_child(t_executor *cmd, t_main *program, int pipefd[2]);
 void heredoc_parent(t_executor *cmd, int pipefd[2], pid_t pid);
-void	handle_heredoc(t_executor *cmd, t_main *program);
-void	pipe_count(t_exec *node);
+void handle_heredoc(t_executor *cmd, t_main *program);
+void pipe_count(t_exec *node);
 
 // path
 char *join_path(char *dir, const char *cmd);
@@ -209,4 +217,3 @@ char *is_executable_path(char *command);
 char *find_command_path(t_main *program, char *command);
 
 #endif
-

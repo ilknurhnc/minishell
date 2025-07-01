@@ -8,16 +8,19 @@ SRCS = 	minishell.c \
 		parse/control.c \
 		parse/seperate.c \
 		parse/setting.c \
+		parse/argv_parser.c \
 		builtin/builtin.c \
 		builtin/env.c \
 		builtin/export.c \
 		builtin/unset.c \
 		builtin/exit.c \
 		builtin/cd.c \
+		builtin/builtin_utils.c \
 		execute/exec.c \
 		execute/heredoc_utils.c\
 		execute/redirect.c \
 		execute/path.c \
+		execute/redirect_control.c \
 		free.c\
 		init.c\
 		

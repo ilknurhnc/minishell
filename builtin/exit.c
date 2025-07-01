@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 13:54:45 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/27 15:48:41 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/30 21:33:02 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	*get_exit_status_code(void)
 {
 	static int	exit_status = 0;
+
 	return (&exit_status);
 }
 
@@ -23,7 +24,7 @@ void	set_exit_status_code(int status)
 	*get_exit_status_code() = status;
 }
 
-int is_numeric(char *str)
+int	is_numeric(char *str)
 {
 	if (!str || *str == '\0')
 		return (0);
@@ -38,12 +39,14 @@ int is_numeric(char *str)
 	return (1);
 }
 
-void exit_helper(t_executor *cmd, int *exit_code)
+void	exit_helper(t_executor *cmd, int *exit_code)
 {
+	int	num;
+
 	if (is_numeric(cmd->argv[1]))
 	{
-		int num = ft_atoi(cmd->argv[1]);
-		*exit_code = (unsigned char)num; // Bash uyumu için cast
+		num = ft_atoi(cmd->argv[1]);
+		*exit_code = (unsigned char)num;
 		set_exit_status_code(*exit_code);
 	}
 	else
@@ -57,15 +60,16 @@ void exit_helper(t_executor *cmd, int *exit_code)
 	}
 }
 
-int ft_exit(t_executor *cmd)
+int	ft_exit(t_executor *cmd)
 {
-	int argc = 0;
-	int exit_code = 0;
+	int	argc;
+	int	exit_code;
 
+	argc = 0;
+	exit_code = 0;
 	while (cmd->argv[argc])
 		argc++;
 	printf("exit\n");
-
 	if (argc == 1)
 		exit_code = *get_exit_status_code();
 	else if (argc == 2)
@@ -76,7 +80,6 @@ int ft_exit(t_executor *cmd)
 		set_exit_status_code(1);
 		return (1);
 	}
-
 	free_resources(cmd->program);
 	exit(exit_code);
 	return (0);

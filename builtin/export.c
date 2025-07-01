@@ -3,42 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/27 15:36:59 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/06/30 21:08:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int is_valid_identifier(char *str)
-{
-	int i;
-
-	if (!str || !(ft_isalpha(str[0]) || str[0] == '_'))
-		return (0);
-	i = 1;
-	while (str[i] && str[i] != '=')
-	{
-		if (!(ft_isalnum(str[i]) || str[i] == '_'))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-void print_export_format(t_env *env)
-{
-	while (env)
-	{
-		if (env->control == 0)
-			printf("declare -x %s=\"%s\"\n", env->before_eq, env->after_eq);
-		else
-			printf("declare -x %s\n", env->before_eq);
-		env = env->next;
-	}
-}
 
 static void add_env(t_main *prog, char *key, char *value)
 {
@@ -107,13 +79,6 @@ int handle_export(t_main *prog, t_executor *node, int i)
 	return 0;
 }
 
-void	print_export_error(char *arg)
-{
-	write(2, "minishell: export: ", 18);
-	write(2, arg, ft_strlen(arg));
-	write(2, ": not a valid identifier\n", 24);
-}
-
 int	ft_export(t_executor *node)
 {
 	t_main	*prog;
@@ -144,34 +109,3 @@ int	ft_export(t_executor *node)
 	}
 	return (0);
 }
-
-// int ft_export(t_executor *node)
-// {
-// 	t_main *prog;
-// 	int i;
-
-// 	prog = node->program;
-// 	if (!node->argv[1])
-// 	{
-// 		print_export_format(prog->env);
-// 		return (0);
-// 	}
-// 	i = 1;
-// 	while (node->argv[i])
-// 	{
-// 		if (!is_valid_identifier(node->argv[i]))
-// 		{
-// 			printf("minishell: export: '%s': not a valid identifier\n",
-// 				   node->argv[i]);
-// 			i++;
-// 			continue;
-// 		}
-// 		if (handle_export(prog, node, i) == 1)
-// 		{
-// 			i++;
-// 			continue;
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
