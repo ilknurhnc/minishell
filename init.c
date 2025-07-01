@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/30 21:12:58 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/01 04:32:01 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,27 @@ void ft_init(t_main *program)
 	program->exit_status = 0;
 	token_init(program);
 	exec_init(program);
+}
+
+void	init_exec(t_main *program, t_executor **node, int count)
+{
+	node[count] = malloc(sizeof(t_executor));
+	if (!node[count])
+	{
+		while (--count >= 0)
+			free(node[count]);
+		free_executer(program);
+		return ;
+	}
+	node[count]->infile = NULL;
+	node[count]->outfile = NULL;
+	node[count]->heredoc_file = -1;
+	node[count]->append = NULL;
+	node[count]->pipe = program->exec->pipe;
+	node[count]->heredoc_delimiters = NULL;
+	node[count]->program = program;
+	node[count]->error = NULL;
+	if (count > 0)
+		node[count - 1]->next = node[count];
+	node[count]->next = NULL;
 }

@@ -3,11 +3,13 @@ NAME = minishell
 SRCS = 	minishell.c \
 		utils.c \
 		signals.c \
+		init.c\
 		parse/quotes.c \
 		parse/dollar.c \
 		parse/control.c \
 		parse/seperate.c \
 		parse/setting.c \
+		parse/parse_utils.c \
 		parse/argv_parser.c \
 		builtin/builtin.c \
 		builtin/env.c \
@@ -21,8 +23,10 @@ SRCS = 	minishell.c \
 		execute/redirect.c \
 		execute/path.c \
 		execute/redirect_control.c \
-		free.c\
-		init.c\
+		execute/process_manage.c \
+		free/free_1.c \
+		free/free_2.c \
+		
 		
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g #-lhistory -lncurses #-fsanitize=address

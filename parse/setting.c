@@ -3,43 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   setting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/19 17:46:11 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/01 04:41:13 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void setting_str(t_main *program)
-// {
-// 	t_exec *new;
-// 	t_token *node;
-// 	char *str;
-// 	char *add;
-
-// 	node = program->token->next;
-// 	while (node && node->tick == 1)
-// 		node = node->next;
-// 	add = ft_strjoin(ft_strdup(""), ft_strdup(""));
-// 	while(node)
-// 	{
-// 		str = ft_strjoin(ft_strdup(add), ft_strdup(node->content));
-// 		free(add);
-// 		if(node->next && node->space == 1 && node->next->rank == 4)
-// 			add = ft_strjoin(ft_strdup(str), ft_strdup(" "));
-// 		else
-// 			add = ft_strdup(str);
-// 		free(str);
-		
-// 		node = node->next;
-// 	}
-// 	new = ft_lstnew_exec(ft_strdup(add));
-// 	new->rank = 4;
-// 	ft_execadd_back(&program->exec, new);
-// 	free(add);
-// }
 
 void setting_sign(t_main *program)
 {

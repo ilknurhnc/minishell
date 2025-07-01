@@ -133,6 +133,10 @@ void tokenize_args(char *line, t_token **token);
 int	design_argv(t_executor **node, t_exec *current, int i);
 void prep_exec(t_main *program);
 t_exec *set_argv(t_executor **node, t_exec *start, int i);
+char	*if_loop(char *line, int i);
+void	find_keys(t_token **token);
+char	*find_helper(char *line, int *ptr_i, int *ptr_j);
+void	new_func(t_token *temp);
 
 // init
 void token_init(t_main *program);
@@ -177,6 +181,10 @@ void free_resources(t_main *program);
 
 // exec
 void	main_execute(t_executor *exec, int prev_fd);
+void set_fork(t_executor *current, int *pipefds, int *output_fd, int prev_fd);
+void wait_child(pid_t *last_pid, int *last_status);
+void	run_execve(t_executor *node, int input_fd, int output_fd);
+void	single_built_in(t_executor *current);
 
 // redirect
 void set_heredoc(t_exec *current, t_executor *cmd, int i);

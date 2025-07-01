@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   seperate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:24:37 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 12:57:13 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/01 04:35:20 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,17 +118,3 @@ void	new_func(t_token *temp)
 		arrange_tokens(temp, "|", 1);
 }
 
-void	find_keys(t_token **token)
-{
-	t_token	*temp;
-
-	temp = (*token)->next;
-	while (temp)
-	{
-		if (temp->flag == -99)
-		{
-			new_func(temp);
-		}
-		temp = temp->next;
-	}
-}

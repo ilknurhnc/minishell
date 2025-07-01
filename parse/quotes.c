@@ -6,22 +6,11 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 13:14:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/11 15:53:26 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/01 04:35:55 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static char	*if_loop(char *line, int i)
-{
-	char	*first;
-	char	*new;
-
-	first = ft_substr(line, 0, i - 2);
-	new = ft_substr(line, i, ft_strlen(&line[i]));
-	line = my_join(line, first, new);
-	return (line);
-}
 
 char	*empty_quotes(char *line)
 {
@@ -50,26 +39,6 @@ char	*empty_quotes(char *line)
 		}
 	}
 	return (line);
-}
-
-static char	*find_helper(char *line, int *ptr_i, int *ptr_j)
-{
-	int		i;
-	int		j;
-	char *content;
-
-	i = *ptr_i;
-	j = *ptr_j;
-	content = ft_substr(line, i, j - i);
-	if (j - i > 0)
-	{
-		i = j;
-		if (line[i] && line[i] != '\0')
-			i++;
-	}
-	*ptr_i = i;
-	*ptr_j = j;
-	return (content);
 }
 
 int	find_quotes(char *line, int *ptr_i, int *ptr_j)
