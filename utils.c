@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+//libft
 size_t	ft_strlen(char *s)
 {
 	int	i;
@@ -42,7 +42,7 @@ int 	ft_strstr(char *str, char *to_find)
 	}
 	return (-1);
 }
-
+//libft
 char	*ft_strdup(char *s1)
 {
 	char	*d;
@@ -61,7 +61,7 @@ char	*ft_strdup(char *s1)
 	*d = '\0';
 	return ((char *)(d - slen));
 }
-
+//libft
 size_t	ft_strlcpy(char *dest, char *src, size_t destsize)
 {
 	size_t	i;
@@ -97,8 +97,8 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	ft_strlcpy(d, s + start, len + 1);
 	return ((char *)d);
 }
-
- size_t	count_word(char *p, char c)
+//libft
+size_t	count_word(char *p, char c)
 {
 	size_t	i;
 	size_t	len;
@@ -117,16 +117,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		}
 	}
 	return (len);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
 }
 
  size_t	check(char **list, size_t count)
@@ -168,6 +158,16 @@ char	**ft_split(char *s, char c)
 	}
 	list[count] = NULL;
 	return (list);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
 }
 
 int	ft_our_strchr( char *s, int c)
@@ -280,7 +280,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s2);
 	return (str);
 }
-
+//libft
 int	ft_isdigit(int c)
 {
 	if (c >= 48 && c <= 57)
@@ -289,7 +289,7 @@ int	ft_isdigit(int c)
 	}
 	return (0);
 }
-
+//libft
 int	ft_isalpha(int c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
@@ -298,7 +298,7 @@ int	ft_isalpha(int c)
 	}
 	return (0);
 }
-
+//libft
 int	ft_isalnum(int c)
 {
 	if(c == 0)
@@ -443,7 +443,7 @@ int	space_control(char *s)
 	}
 	return (0);
 }
-
+//libft
 int	ft_atoi(const char *str)
 {
 	int	sign;
@@ -468,7 +468,7 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * result);
 }
-
+//libft
 static int	bas_num(long n)
 {
 	int	digit_num;
@@ -488,7 +488,7 @@ static int	bas_num(long n)
 	}
 	return (digit_num);
 }
-
+//libft
 char	*ft_itoa(int n)
 {
 	int		digit_num;
@@ -568,7 +568,7 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 	}
 	return (dest);
 }
-
+//libft
 char	*ft_strnstr(const char *src, const char *to_find, size_t n)
 {
 	size_t	j;

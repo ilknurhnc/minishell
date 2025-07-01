@@ -18,7 +18,7 @@ int	parsing(char *line, t_main *program)
 
 	if (quote_control(line) != 0)
 	{
-		return 1;
+		return (1);
 	}
 	linenew = empty_quotes(line);
 	tokenize_args(linenew, &program->token);
@@ -26,9 +26,9 @@ int	parsing(char *line, t_main *program)
 	dollar_control(program->token);
 	if (set_rank(program->token) == 1)
 	{
-		return 1;
+		return (1);
 	}
-	return 0;
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
@@ -49,20 +49,20 @@ int	main(int ac, char **av, char **env)
 		ft_init(&program);
 		line = readline("minishell> ");
 		if (line == NULL) // Eğer Ctrl-D ile EOF alırsak,
-			//readline() NULL döndürecektir
+							// readline() NULL döndürecektir
 		{
 			printf("exit\n");
 			free_token(&program);
 			break ;
 		}
-		else if(space_control(line) == 0)
+		else if (space_control(line) == 0)
 		{
 			free(line);
 			free_program(&program, 2);
-			continue;
+			continue ;
 		}
 		else if (ft_strlen(line) > 0)
-		{ 
+		{
 			add_history(line);
 			if (parsing(line, &program) == 0)
 				prep_exec(&program);
