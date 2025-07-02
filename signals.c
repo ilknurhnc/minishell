@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:23 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/02 14:51:11 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:57:10 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ void	signal_handler(int signal)
 	{
 		set_exit_status_code(130);
 		exit(130);
+	}
+	else if (g_signal_exit == 5)
+	{
+		set_exit_status_code(130);
+		write(1, "\n", 1);
+				rl_on_new_line();
+
 	}
 	set_exit_status_code(130);
 	g_signal_exit = 130;

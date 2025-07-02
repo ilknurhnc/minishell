@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 04:10:48 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/01 04:10:52 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:54:32 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	main_execute(t_executor *exec, int prev_fd)
 	last_pid = -1;
 	last_status = 0;
 	current = exec;
+	g_signal_exit=5;
 	while (current)
 	{
 		output_fd = STDOUT_FILENO;

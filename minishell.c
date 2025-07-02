@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:30 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/01 04:40:31 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:52:23 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	main(int ac, char **av, char **env)
 	env_init(&program, env);
 	while (1)
 	{
+		g_signal_exit=0;
 		ft_init(&program);
 		line = readline("minishell> ");
 		if (line == NULL) // Eğer Ctrl-D ile EOF alırsak,
