@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/02 18:58:32 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 17:36:35 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,15 @@ void	if_first(t_main *program, char *add, int first)
 	free(add);
 }
 
-void	set_helper(t_token *node, char **add, int *first, int *new_flag)
+void	set_helper(t_token *node, char **add)
 {
 	char *str;
 	
-	*new_flag = 0;
 	str = ft_strjoin(ft_strdup(*add), ft_strdup(node->content));
 	free(*add);
 	if (node->next && node->space == 1 && node->next->rank == 4)
 	{
 		*add = ft_strdup(str);
-		node->tick = 1;
-		node = node->next;
-		if (node && node->space == 1)
-			*new_flag = 1;
-		*first = 1;
 		free(str);
 		return ;
 	}
@@ -83,17 +77,21 @@ void	setting_sign(t_main *program)
 	char	*add;
 	int		first;
 	int		new_flag;
+	int		flag;
 
+	flag = 0;
 	new_flag = 0;
 	first = 0;
 	node = program->token->next;
 	while (node && node->tick == 1)
 		node = node->next;
 	add = ft_strjoin(ft_strdup(""), ft_strdup(""));
-	while (node && node->rank == 4 && (node->space == 0 || new_flag == 1))
+	while (node && node->rank == 4 && (node->space == 0 || new_flag == 1) && flag == 0)
 	{
-		set_helper(node, &add, &first, &new_flag);
+		set_helper(node, &add);
 		node->tick = 1;
+		if (node->space == 1 && node->next)
+			flag = 1;
 		node = node->next;
 		if (node && node->space == 1)
 			new_flag = 1;

@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 21:52:28 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/01 01:30:27 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 17:31:55 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ int	is_directory(const char *path)
 	struct stat	st;
 
 	if (stat(path, &st) == -1)
-		return (0); // Dosya yok veya hata
+		return (0);
 	if (S_ISDIR(st.st_mode))
-		return (1); // Klasör
-	return (0);     // Klasör değil
+		return (1);
+	return (0);
 }
 
 void	set_error_and_exit(char **dst, char *msg)

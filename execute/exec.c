@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 04:10:48 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/02 15:54:32 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 17:41:52 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 	cmd_path = find_command_path(node->program, node->argv[0]);
 	if (!cmd_path)
 	{
-		printf("%s: command not found\n", node->argv[0]);
+		write(2, &node->argv[0], ft_strlen(node->argv[0]));
+		write(2, ": command not found\n", 21);
 		free_resources(node->program);
 		exit(127);
 	}
