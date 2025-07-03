@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_control.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 21:52:28 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 17:31:55 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:56:22 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,11 @@ void	check_redirect_access_input(const char *filename, t_executor *cmd)
 	}
 }
 
-int	check_redirect_access(const char *filename, int rank, char **error)
+int	check_redirect_access(const char *filename, int rank, char **error,
+		int flags)
 {
 	int	fd;
-	int	flags;
 
-	flags = 0;
 	if (is_directory(filename))
 	{
 		set_error_and_exit(error, ": Is a directory");
@@ -94,7 +93,7 @@ void	check_redirect_file(t_executor *cmd, char *filename, int rank)
 	}
 	else if (rank == 6 || rank == 5)
 	{
-		if (check_redirect_access(filename, rank, &cmd->error) < 0)
+		if (check_redirect_access(filename, rank, &cmd->error, 0) < 0)
 			return ;
 		if (rank == 6)
 		{

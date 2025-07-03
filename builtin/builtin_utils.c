@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:47:58 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/30 21:37:27 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:30:55 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	is_valid_identifier(char *str)
 	return (1);
 }
 
-void	print_export_format(t_env *env)
+int	print_export_format(t_env *env)
 {
 	while (env)
 	{
@@ -45,6 +45,7 @@ void	print_export_format(t_env *env)
 			printf("declare -x %s\n", env->before_eq);
 		env = env->next;
 	}
+	return (0);
 }
 
 int	env_print_error(char *msg, int code)

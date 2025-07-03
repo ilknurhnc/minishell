@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:18:43 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/01 01:35:21 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:45:44 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,24 @@
 
 void	set_heredoc(t_exec *current, t_executor *cmd, int i)
 {
+	int	j;
+
+	j = 0;
 	if (current && current->next)
 	{
 		if (!cmd->heredoc_delimiters)
 		{
 			cmd->heredoc_delimiters = malloc(sizeof(char *) * 10);
 			if (!cmd->heredoc_delimiters)
+			{
+				free_resources(current->program);
 				exit(1);
-			for (int j = 0; j < 10; j++)
+			}
+			while (j < 10)
+			{
 				cmd->heredoc_delimiters[j] = NULL;
+				j++;
+			}
 		}
 		if (cmd->heredoc_delimiters[i])
 			free(cmd->heredoc_delimiters[i]);
@@ -73,49 +82,16 @@ void	redirect_handle(t_executor *node)
 
 void	free_heredoc_delimiters(t_executor *cmd)
 {
+	int	i;
+
 	if (!cmd->heredoc_delimiters)
 		return ;
-	for (int i = 0; i < 10; i++)
+	i = 0;
+	while (i < 10)
+	{
 		free(cmd->heredoc_delimiters[i]);
+		i++;
+	}
 	free(cmd->heredoc_delimiters);
 	cmd->heredoc_delimiters = NULL;
 }
-
-// void redirect_handle(t_executor *node)
-// {
-// 	int fd;
-
-// 	if (node->infile)
-// 	{
-// 		fd = open(node->infile, O_RDONLY);
-// 		if (fd < 0)
-// 		{
-// 			perror("minishell: open infile");
-// 			exit(1);
-// 		}
-// 		dup2(fd, STDIN_FILENO);
-// 		close(fd);
-// 	}
-// 	if (node->outfile)
-// 	{
-// 		fd = open(node->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-// 		if (fd < 0)
-// 		{
-// 			perror("minishell: open outfile");
-// 			exit(1);
-// 		}
-// 		dup2(fd, STDOUT_FILENO);
-// 		close(fd);
-// 	}
-// 	if (node->append)
-// 	{
-// 		fd = open(node->append, O_WRONLY | O_CREAT | O_APPEND, 0644);
-// 		if (fd < 0)
-// 		{
-// 			perror("minishell: open append outfile");
-// 			exit(1);
-// 		}
-// 		dup2(fd, STDOUT_FILENO);
-// 		close(fd);
-// 	}
-// }

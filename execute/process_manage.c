@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_manage.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 03:58:57 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/01 04:08:56 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:54:06 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,14 @@ void	wait_child(pid_t *last_pid, int *last_status)
 	pid_t	pid;
 	int		status;
 
-	while ((pid = wait(&status)) > 0)
+	pid = wait(&status);
+	while (pid > 0)
 	{
 		if (WIFEXITED(status))
 			*last_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 			*last_status = 128 + WTERMSIG(status);
 		*last_pid = pid;
+		pid = wait(&status);
 	}
 }

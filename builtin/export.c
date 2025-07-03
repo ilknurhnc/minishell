@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/30 21:08:36 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:31:15 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,8 @@ int	ft_export(t_executor *node)
 
 	prog = node->program;
 	if (!node->argv[1])
-	{
-		print_export_format(prog->env);
-		return (0);
-	}
+		if (print_export_format(prog->env) == 0)
+			return (0);
 	i = 1;
 	while (node->argv[i])
 	{
@@ -98,7 +96,6 @@ int	ft_export(t_executor *node)
 			print_export_error(node->argv[i]);
 			i++;
 			return (1);
-			continue ;
 		}
 		if (handle_export(prog, node, i) == 1)
 		{

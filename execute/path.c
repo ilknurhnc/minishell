@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 18:57:59 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/27 19:18:20 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:47:23 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,19 +91,19 @@ char	*is_executable_path(char *command)
 char	*find_command_path(t_main *program, char *command)
 {
 	char	*dir;
-	char	*full_path;
 	char	*path_env;
-	char	*exec_path;
+	char	*full_path;
 	int		pos;
 
-	exec_path = is_executable_path(command);
-	if (exec_path)
-		return (exec_path);
+	full_path = is_executable_path(command);
+	if (full_path)
+		return (full_path);
 	path_env = get_path_from_env(program->env);
 	if (!path_env)
 		return (NULL);
 	pos = 0;
-	while ((dir = get_next_path_dir(path_env, &pos)) != NULL)
+	dir = get_next_path_dir(path_env, &pos);
+	while (dir)
 	{
 		full_path = join_path(dir, command);
 		free(dir);
@@ -112,6 +112,7 @@ char	*find_command_path(t_main *program, char *command)
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
 		free(full_path);
+		dir = get_next_path_dir(path_env, &pos);
 	}
 	return (NULL);
 }

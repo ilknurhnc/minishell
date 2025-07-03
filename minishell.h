@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 17:57:37 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:55:52 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,8 @@ int							is_directory(const char *path);
 void						check_redirect_access_input(const char *filename,
 								t_executor *cmd);
 int							check_redirect_access(const char *filename,
-								int rank, char **error);
+								int rank, char **error, int flags);
+
 void						check_redirect_file(t_executor *cmd, char *filename,
 								int rank);
 void						set_redirect(t_exec *current, t_executor *cmd);
@@ -231,7 +232,7 @@ int							ft_cd(t_executor *node);
 int							ft_exit(t_executor *cmd);
 void						print_export_error(char *arg);
 int							is_valid_identifier(char *str);
-void						print_export_format(t_env *env);
+int							print_export_format(t_env *env);
 int							env_print_error(char *msg, int code);
 
 // heredoc_utils
