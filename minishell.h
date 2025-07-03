@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
+/*   Updated: 2025/07/03 17:57:37 by ihancer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -120,6 +132,7 @@ char						*ft_strcpy(char *dest, char *src);
 char						*ft_strncpy(char *dest, char *src, unsigned int n);
 char						*ft_strnstr(const char *src, const char *to_find,
 								size_t n);
+int							ft_isdigit(int c);
 
 // signal
 void						signal_init(void);

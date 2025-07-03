@@ -1,7 +1,6 @@
 NAME = minishell
 
 SRCS = 	minishell.c \
-		utils.c \
 		signals.c \
 		init.c\
 		parse/quotes.c \
@@ -26,8 +25,14 @@ SRCS = 	minishell.c \
 		execute/process_manage.c \
 		free/free_1.c \
 		free/free_2.c \
-		
-		
+		utils/utils_1.c \
+		utils/utils_2.c \
+		utils/utils_3.c \
+		utils/utils_4.c \
+		utils/utils_5.c \
+		utils/utils_6.c \
+		utils/utils_7.c \
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g #-lhistory -lncurses #-fsanitize=address
 OBJS = $(SRCS:.c=.o)

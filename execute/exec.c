@@ -6,11 +6,19 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 04:10:48 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 17:41:52 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 17:50:59 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	print_error_and_exit(t_main *program, char *cmd, char *msg, int code)
+{
+	write(2, cmd, ft_strlen(cmd));
+	write(2, msg, ft_strlen(msg));
+	free_resources(program);
+	exit(code);
+}
 
 void	single_built_in(t_executor *current)
 {
@@ -36,24 +44,19 @@ void	single_built_in(t_executor *current)
 
 void	is_executable(char *cmd, t_main *program)
 {
-	char	*executable;
+	struct stat	path_stat;
 
-	if (ft_strnstr(cmd, "./", 2) == NULL)
-		return ;
-	executable = ft_strnstr(cmd, "./", 2);
-	if (access(executable, F_OK) < 0)
+	if (ft_strchr(cmd, '/') != NULL)
 	{
-		printf("%s: No such file or directory\n", executable);
-		set_exit_status_code(127);
-		free_resources(program);
-		exit(127);
-	}
-	if (access(executable, X_OK) < 0)
-	{
-		printf("%s: Permission denied\n", executable);
-		set_exit_status_code(126);
-		free_resources(program);
-		exit(126);
+		if (stat(cmd, &path_stat) == -1)
+			print_error_and_exit(program, cmd,
+				": No such file or directory\n", 127);
+		if (S_ISDIR(path_stat.st_mode))
+			print_error_and_exit(program, cmd,
+				": Is a directory\n", 126);
+		if (access(cmd, X_OK) < 0)
+			print_error_and_exit(program, cmd,
+				": Permission denied\n", 126);
 	}
 }
 
@@ -74,12 +77,8 @@ void	run_execve(t_executor *node, int input_fd, int output_fd)
 	is_executable(node->argv[0], node->program);
 	cmd_path = find_command_path(node->program, node->argv[0]);
 	if (!cmd_path)
-	{
-		write(2, &node->argv[0], ft_strlen(node->argv[0]));
-		write(2, ": command not found\n", 21);
-		free_resources(node->program);
-		exit(127);
-	}
+		print_error_and_exit(node->program, node->argv[0],
+			" : command not found\n", 127);
 	execve(cmd_path, node->argv, node->program->env_str);
 	perror("execve failed");
 	free_resources(node->program);
@@ -98,7 +97,7 @@ void	main_execute(t_executor *exec, int prev_fd)
 	last_pid = -1;
 	last_status = 0;
 	current = exec;
-	g_signal_exit=5;
+	g_signal_exit = 5;
 	while (current)
 	{
 		output_fd = STDOUT_FILENO;
