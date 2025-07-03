@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argv_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 01:45:18 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/01 04:31:03 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:23:53 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	design_argv(t_executor **node, t_exec *current, int i)
 			if (!node[i]->heredoc_delimiters)
 			{
 				free_resources(current->program);
-				exit(1); // DÜZELT
+				exit(1);
 			}
 		}
 		node[i]->heredoc_delimiters[h_count] = NULL;

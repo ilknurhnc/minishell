@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/03 17:36:35 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:23:30 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	create_new_node(t_main *program, t_token *node)
 {
 	t_exec	*new_node;
-	int flag;
-	
+	int		flag;
+
 	flag = 0;
 	if (node && node->space == 1)
 	{
@@ -43,8 +43,8 @@ int	create_new_node(t_main *program, t_token *node)
 
 void	if_first(t_main *program, char *add, int first)
 {
-	t_exec *new;
-	
+	t_exec	*new;
+
 	if (first == 1)
 	{
 		new = ft_lstnew_exec(ft_strdup(add));
@@ -56,8 +56,8 @@ void	if_first(t_main *program, char *add, int first)
 
 void	set_helper(t_token *node, char **add)
 {
-	char *str;
-	
+	char	*str;
+
 	str = ft_strjoin(ft_strdup(*add), ft_strdup(node->content));
 	free(*add);
 	if (node->next && node->space == 1 && node->next->rank == 4)
@@ -68,7 +68,7 @@ void	set_helper(t_token *node, char **add)
 	}
 	else
 		*add = ft_strdup(str);
-	free(str);	
+	free(str);
 }
 
 void	setting_sign(t_main *program)
@@ -86,7 +86,8 @@ void	setting_sign(t_main *program)
 	while (node && node->tick == 1)
 		node = node->next;
 	add = ft_strjoin(ft_strdup(""), ft_strdup(""));
-	while (node && node->rank == 4 && (node->space == 0 || new_flag == 1) && flag == 0)
+	while (node && node->rank == 4 && (node->space == 0 || new_flag == 1)
+		&& flag == 0)
 	{
 		set_helper(node, &add);
 		node->tick = 1;

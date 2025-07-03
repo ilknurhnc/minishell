@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:30 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/02 15:52:23 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:20:14 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,43 +31,50 @@ int	parsing(char *line, t_main *program)
 	return (0);
 }
 
+int	ft_readline(t_main *program, char **line)
+{
+	*line = readline("minishell> ");
+	if (*line == NULL)
+	{
+		printf("exit\n");
+		free_token(program);
+		return (0);
+	}
+	else if (space_control(*line) == 0)
+	{
+		free(*line);
+		free_program(program, 2);
+		return (1);
+	}
+	else if (ft_strlen(*line) > 0)
+	{
+		add_history(*line);
+		if (parsing(*line, program) == 0)
+			prep_exec(program);
+	}
+	return (2);
+}
+
 int	main(int ac, char **av, char **env)
 {
+	int		i;
 	char	*line;
 	t_main	program;
 
 	(void)av;
+	line = NULL;
 	if (ac != 1)
-		exit(61);
+		exit(1);
 	signal_init();
-	program.env_str = calloc(sizeof(char *), 1000);
-	if (!program.env_str)
-		exit(1); // DÜZELT
 	env_init(&program, env);
 	while (1)
 	{
-		g_signal_exit=0;
 		ft_init(&program);
-		line = readline("minishell> ");
-		if (line == NULL) // Eğer Ctrl-D ile EOF alırsak,
-							// readline() NULL döndürecektir
-		{
-			printf("exit\n");
-			free_token(&program);
+		i = ft_readline(&program, &line);
+		if (i == 0)
 			break ;
-		}
-		else if (space_control(line) == 0)
-		{
-			free(line);
-			free_program(&program, 2);
+		if (i == 1)
 			continue ;
-		}
-		else if (ft_strlen(line) > 0)
-		{
-			add_history(line);
-			if (parsing(line, &program) == 0)
-				prep_exec(&program);
-		}
 		main_free(program, line, 0);
 	}
 	main_free(program, line, 1);

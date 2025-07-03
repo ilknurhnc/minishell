@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/01 04:32:01 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/03 18:26:04 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ void	env_init(t_main *program, char **env)
 {
 	t_env	*envp;
 
+	program->env_str = calloc(sizeof(char *), 1000);
+	if (!program->env_str)
+		exit(1);
 	envp = NULL;
 	get_env(&envp, env);
 	program->env = envp;
@@ -56,6 +59,7 @@ void	exec_init(t_main *program)
 
 void	ft_init(t_main *program)
 {
+	g_signal_exit = 0;
 	program->control = 0;
 	program->exit_status = 0;
 	token_init(program);
