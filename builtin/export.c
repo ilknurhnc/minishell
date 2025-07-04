@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 12:51:30 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 13:10:14 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,9 @@ int	ft_export(t_executor *node)
 {
 	t_main	*prog;
 	int		i;
+	int flag;
 
+	flag = 1;
 	prog = node->program;
 	if (!node->argv[1])
 		if (print_export_format(prog->env) == 0)
@@ -121,9 +123,8 @@ int	ft_export(t_executor *node)
 	{
 		if (!is_valid_identifier(node->argv[i]))
 		{
-			print_export_error(node->argv[i]);
-			i++;
-			return (1);
+			print_export_error(node->argv[i++], &flag);
+			continue;
 		}
 		if (handle_export(prog, node, i) == 1)
 		{
@@ -132,5 +133,5 @@ int	ft_export(t_executor *node)
 		}
 		i++;
 	}
-	return (0);
+	return (flag);
 }

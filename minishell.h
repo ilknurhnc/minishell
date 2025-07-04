@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 18:55:52 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 13:10:38 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,7 @@ int							ft_export(t_executor *node);
 int							ft_unset(t_executor *node);
 int							ft_cd(t_executor *node);
 int							ft_exit(t_executor *cmd);
-void						print_export_error(char *arg);
+void						print_export_error(char *arg, int *flag);
 int							is_valid_identifier(char *str);
 int							print_export_format(t_env *env);
 int							env_print_error(char *msg, int code);

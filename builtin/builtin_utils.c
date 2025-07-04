@@ -6,14 +6,15 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:47:58 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 12:56:43 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 13:09:45 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_export_error(char *arg)
+void	print_export_error(char *arg, int *flag)
 {
+	*flag = 1;
 	write(2, "minishell: export: ", 19);
 	write(2, arg, ft_strlen(arg));
 	write(2, ": not a valid identifier\n", 26);
