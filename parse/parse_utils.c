@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 04:34:19 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/01 04:36:09 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:15:48 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	find_keys(t_token **token)
 	{
 		if (temp->flag == -99)
 		{
-			new_func(temp);
+			set_keys(temp);
 		}
 		temp = temp->next;
 	}

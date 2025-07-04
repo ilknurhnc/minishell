@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 12:24:37 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/01 04:35:20 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:15:40 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	arrange_tokens(t_token *token, char *content, int len)
 	}
 }
 
-void	new_func(t_token *temp)
+void	set_keys(t_token *temp)
 {
 	if (temp->content != NULL && ft_strstr(temp->content, "<<") != -1)
 		arrange_tokens(temp, "<<", 2);

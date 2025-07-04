@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:39 by hbayram           #+#    #+#             */
-/*   Updated: 2025/06/03 12:59:40 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:32:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ int	pipe_control(t_token *token)
 	t_token	*node;
 
 	node = token->next;
-	if (node != NULL && (node->rank == 1 || node->rank == 6 || node->rank == 5
-			|| ft_lstlast(node)->rank != 4))
+	if (node != NULL && (node->rank == 1 || ft_lstlast(node)->rank != 4))
 		return (printf("error, unexpected token\n"), 1);
 	while (node != NULL && node->next != NULL)
 	{

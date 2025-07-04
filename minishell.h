@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 13:24:13 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:16:15 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_exec						*set_argv(t_executor **node, t_exec *start, int i);
 char						*if_loop(char *line, int i);
 void						find_keys(t_token **token);
 char						*find_helper(char *line, int *ptr_i, int *ptr_j);
-void						new_func(t_token *temp);
+void						set_keys(t_token *temp);
 
 // init
 void						token_init(t_main *program);
