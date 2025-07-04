@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 13:10:14 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 13:14:19 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	ft_export(t_executor *node)
 {
 	t_main	*prog;
 	int		i;
-	int flag;
+	int		flag;
 
 	flag = 1;
 	prog = node->program;
@@ -124,7 +124,7 @@ int	ft_export(t_executor *node)
 		if (!is_valid_identifier(node->argv[i]))
 		{
 			print_export_error(node->argv[i++], &flag);
-			continue;
+			continue ;
 		}
 		if (handle_export(prog, node, i) == 1)
 		{
