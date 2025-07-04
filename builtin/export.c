@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 18:25:24 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 18:31:15 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 12:51:30 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,32 @@ void	update_or_add_env(t_main *prog, char *key, char *value)
 	add_env(prog, key, value);
 }
 
+void	add_empty_value(t_main *prog, char *key, char *value)
+{
+	t_env	*tmp;
+	char	*tmp1;
+	char	*tmp2;
+
+	tmp = prog->env;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->before_eq, key) == 0)
+		{
+			free(tmp->after_eq);
+			tmp->after_eq = ft_strdup(value);
+			free(tmp->full_str);
+			tmp1 = ft_strjoin(ft_strdup(key), ft_strdup("="));
+			tmp2 = ft_strjoin(tmp1, ft_strdup(value));
+			tmp->full_str = tmp2;
+			tmp->control = 0;
+			fill_array(prog, ft_lstsize_env(prog->env));
+			return ;
+		}
+		tmp = tmp->next;
+	}
+	add_env(prog, key, value);
+}
+
 int	handle_export(t_main *prog, t_executor *node, int i)
 {
 	char	*equal_pos;
@@ -67,6 +93,8 @@ int	handle_export(t_main *prog, t_executor *node, int i)
 		key_len = equal_pos - node->argv[i];
 		key = ft_substr(node->argv[i], 0, key_len);
 		value = ft_substr(equal_pos + 1, 0, strlen(equal_pos + 1));
+		if (ft_strlen(value) == 0)
+			add_empty_value(prog, key, value);
 		update_or_add_env(prog, key, value);
 		set_env(prog, prog->env);
 		i++;
