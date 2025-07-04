@@ -6,7 +6,7 @@
 /*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:47:58 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 18:30:55 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 12:56:43 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	print_export_error(char *arg)
 {
-	write(2, "minishell: export: ", 18);
+	write(2, "minishell: export: ", 19);
 	write(2, arg, ft_strlen(arg));
-	write(2, ": not a valid identifier\n", 24);
+	write(2, ": not a valid identifier\n", 26);
 }
 
 int	is_valid_identifier(char *str)
