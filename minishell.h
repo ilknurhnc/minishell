@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 15:16:15 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:40:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ void						free_executer(t_main *program);
 void						free_token(t_main *program);
 
 void						setting_str(t_main *program);
-void						setting_sign(t_main *program);
+void						setting_node(t_main *program);
 void						free_executer(t_main *program);
 void						free_resources(t_main *program);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:23 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/03 18:57:46 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 18:53:12 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,15 @@ void	signal_handler(int signal)
 	g_signal_exit = 130;
 }
 
+void	sigquit_handler(int sig)
+{
+	(void)sig;
+	write(2, "Quit (core dumped)\n", 19);
+	set_exit_status_code(131);
+}
+
 void	signal_init(void)
 {
 	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, sigquit_handler);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:16:34 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/03 18:26:04 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:46:30 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ void	init_exec(t_main *program, t_executor **node, int count)
 	{
 		while (--count >= 0)
 			free(node[count]);
-		free_executer(program);
-		return ;
+		free_resources(program);
+		exit(1);
 	}
 	node[count]->infile = NULL;
 	node[count]->outfile = NULL;

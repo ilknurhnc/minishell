@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/06/30 21:25:22 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/04 19:03:13 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	ft_cd(t_executor *node)
 
 	prog = node->program;
 	oldpwd = getcwd(NULL, 0);
+	if (node->argv[2])
+		return (cd_error(NULL, "too many arguments\n"));
 	if (!node->argv[1])
 		target = get_env_value(prog->env, "HOME");
 	else if (ft_strcmp(node->argv[1], "-") == 0)
@@ -62,48 +64,10 @@ int	ft_cd(t_executor *node)
 	}
 	else
 		target = node->argv[1];
-	if (!target || chdir(target) != 0)
+	if (!target)
+		return (cd_error(target, ": HOME not set\n"));
+	if (chdir(target) != 0)
 		return (cd_error(target, ": No such file or directory\n"));
-	if (node->argv[2])
-		return (cd_error(NULL, "too many arguments\n"));
 	update_cd(prog, oldpwd);
 	return (0);
 }
-
-// int	ft_cd(t_executor *node)
-// {
-// 	t_main *prog;
-// 	char *target;
-// 	char *oldpwd;
-
-// 	prog = node->program;
-// 	oldpwd = getcwd(NULL, 0);
-// 	if (!node->argv[1]) // cd
-// 		target = get_env_value(prog->env, "HOME");
-// 	else if (ft_strcmp(node->argv[1], "-") == 0) // cd -
-// 	{
-// 		target = get_env_value(prog->env, "OLDPWD");
-// 		if (target)
-// 			printf("%s\n", target);
-// 	}
-// 	else
-// 		target = node->argv[1];
-// 	if (!target || chdir(target) != 0)
-// 	{
-// 		write(2, "minishell: cd: ", 15);
-// 		write(2, target, ft_strlen(target));
-// 		write(2, ": No such file or directory\n", 28);
-// 		set_exit_status_code(1);
-// 		free(oldpwd);
-// 		return (1);
-// 	}
-// 	if (node->argv[2]) // If there are more than one argument
-// 	{
-// 		write(2, "minishell: cd: too many arguments\n", 34);
-// 		set_exit_status_code(1);
-// 		free(oldpwd);
-// 		return (1);
-// 	}
-// 	update_cd(prog, oldpwd);
-// 	return (0);
-// }

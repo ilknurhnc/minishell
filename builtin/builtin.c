@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:01:30 by ilknurhance       #+#    #+#             */
-/*   Updated: 2025/06/30 21:19:13 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/04 18:30:16 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ int	ft_echo(t_executor *node)
 	}
 	while (node->argv[i])
 	{
-		printf("%s", node->argv[i]);
+		write(STDOUT_FILENO, node->argv[i], ft_strlen(node->argv[i]));
 		if (node->argv[i + 1])
-			printf(" ");
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
 

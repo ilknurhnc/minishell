@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argv_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 01:45:18 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/03 18:23:53 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:40:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	prep_exec(t_main *program)
 
 	current = program->exec;
 	count = 0;
-	setting_sign(program);
+	setting_node(program);
 	pipe_count(program->exec);
 	i = program->exec->pipe + 1;
 	node = malloc(sizeof(t_executor *) * (i + 1));

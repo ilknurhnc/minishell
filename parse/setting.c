@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 15:25:08 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/03 18:47:05 by hbayram          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:40:36 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	set_helper(t_token *node, char **add, int *flag)
 		*flag = 1;
 }
 
-void	setting_sign(t_main *program)
+void	setting_node(t_main *program)
 {
 	t_token	*node;
 	char	*add;
@@ -102,5 +102,5 @@ void	setting_sign(t_main *program)
 	}
 	if_first(program, add, first);
 	if (create_new_node(program, node) == 1)
-		setting_sign(program);
+		setting_node(program);
 }
