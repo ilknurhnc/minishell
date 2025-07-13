@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/08 16:32:35 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/13 11:43:55 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_cd(t_executor *node)
 	if (!target)
 		return (cd_error(target, ": HOME not set\n", oldpwd));
 	if (chdir(target) != 0)
-		return (cd_error(target, ": No such file or directory\n", oldpwd)); //bruada
+		return (cd_error(target, ": No such file or directory\n", oldpwd));
 	update_cd(prog, oldpwd);
 	return (0);
 }

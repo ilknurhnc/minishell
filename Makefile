@@ -34,7 +34,7 @@ SRCS = 	minishell.c \
 		utils/utils_7.c \
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
@@ -49,5 +49,8 @@ fclean: clean
 	@${RM} ${NAME}
 
 re: fclean all
+
+leak:
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
 
 .PHONY: all clean fclean re
