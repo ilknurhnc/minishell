@@ -6,7 +6,7 @@
 /*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:55:02 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 19:03:13 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:32:35 by ihancer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ static void	update_cd(t_main *prog, char *oldpwd)
 	free(newpwd);
 }
 
-static int	cd_error(char *target, char *msg)
+static int	cd_error(char *target, char *msg, char *oldpwd)
 {
 	write(2, "minishell: cd: ", 15);
 	if (target)
 		write(2, target, ft_strlen(target));
 	write(2, msg, ft_strlen(msg));
 	set_exit_status_code(1);
+	free(oldpwd);
 	return (1);
 }
 
@@ -52,9 +53,9 @@ int	ft_cd(t_executor *node)
 
 	prog = node->program;
 	oldpwd = getcwd(NULL, 0);
-	if (node->argv[2])
-		return (cd_error(NULL, "too many arguments\n"));
-	if (!node->argv[1])
+	if (node->argv[2] != NULL)
+		return (cd_error(NULL, "too many arguments\n", oldpwd));
+	if (!node->argv[1] || ft_strcmp(node->argv[1], "~") == 0)
 		target = get_env_value(prog->env, "HOME");
 	else if (ft_strcmp(node->argv[1], "-") == 0)
 	{
@@ -65,9 +66,9 @@ int	ft_cd(t_executor *node)
 	else
 		target = node->argv[1];
 	if (!target)
-		return (cd_error(target, ": HOME not set\n"));
+		return (cd_error(target, ": HOME not set\n", oldpwd));
 	if (chdir(target) != 0)
-		return (cd_error(target, ": No such file or directory\n"));
+		return (cd_error(target, ": No such file or directory\n", oldpwd)); //bruada
 	update_cd(prog, oldpwd);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argv_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 01:45:18 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 15:40:36 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:08:17 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ t_exec	*set_argv(t_executor **node, t_exec *start, int i)
 	j = 0;
 	node[i]->argv = malloc(sizeof(char *) * 100);
 	if (!node[i]->argv)
-		return (NULL);
+		cannot_open(node[i]->program);
+	ft_memset(node[i]->argv, 0, sizeof(char *) * 100);
 	while (current && current->rank && current->rank != 1)
 	{
 		if (current->rank == 4 && current->content)
@@ -82,7 +83,7 @@ void	prep_exec(t_main *program)
 	i = program->exec->pipe + 1;
 	node = malloc(sizeof(t_executor *) * (i + 1));
 	if (!node)
-		return ;
+		cannot_open(program);
 	while (count < i)
 	{
 		init_exec(program, node, count);

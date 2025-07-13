@@ -34,16 +34,13 @@ SRCS = 	minishell.c \
 		utils/utils_7.c \
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #-lhistory -lncurses #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
 all: ${NAME}
 ${NAME}: ${OBJS}
 	@${CC} ${CFLAGS} ${OBJS} -o ${NAME} -lreadline
-
-leak:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
 
 clean: 
 	@${RM} ${OBJS}

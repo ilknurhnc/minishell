@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:53:09 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 15:40:36 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:09:11 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ char						*ft_strncpy(char *dest, char *src, unsigned int n);
 char						*ft_strnstr(const char *src, const char *to_find,
 								size_t n);
 int							ft_isdigit(int c);
+void						*ft_memset(void *s, int c, size_t n);
 
 // signal
 void						signal_init(void);
@@ -171,12 +172,10 @@ int							set_rank(t_token *token);
 int							quote_control(char *line);
 
 void						find_keys(t_token **token);
-void						print_token(t_token *list);
 
 // env
 void						set_env(t_main *program, t_env *env);
 void						get_env(t_env **envp, char **env);
-void						print_env_array(t_main *program);
 void						fill_array(t_main *program, int i);
 int							ft_lstsize_env(t_env *env);
 void						update_or_add_env(t_main *prog, char *key,
@@ -191,11 +190,10 @@ void						free_env(t_main *program);
 void						free_exec(t_main *program);
 void						free_executer(t_main *program);
 void						free_token(t_main *program);
-
-void						setting_str(t_main *program);
 void						setting_node(t_main *program);
 void						free_executer(t_main *program);
 void						free_resources(t_main *program);
+int							cannot_open(t_main *program);
 
 // exec
 void						main_execute(t_executor *exec, int prev_fd);
@@ -209,7 +207,6 @@ void						single_built_in(t_executor *current);
 // redirect
 void						set_heredoc(t_exec *current, t_executor *cmd,
 								int i);
-// char *is_directory(const char *path);
 int							is_directory(const char *path);
 
 void						check_redirect_access_input(const char *filename,

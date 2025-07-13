@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:44:23 by hbayram           #+#    #+#             */
-/*   Updated: 2025/07/04 18:53:12 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:06:53 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		g_signal_exit = 0;
+int			g_signal_exit = 0;
 
 static void	handle_signal_case(void)
 {
@@ -49,15 +49,8 @@ void	signal_handler(int signal)
 	g_signal_exit = 130;
 }
 
-void	sigquit_handler(int sig)
-{
-	(void)sig;
-	write(2, "Quit (core dumped)\n", 19);
-	set_exit_status_code(131);
-}
-
 void	signal_init(void)
 {
 	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, sigquit_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

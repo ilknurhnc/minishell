@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ihancer <ihancer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbayram <hbayram@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 04:34:19 by ihancer           #+#    #+#             */
-/*   Updated: 2025/07/04 15:15:48 by ihancer          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:08:43 by hbayram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,27 @@ char	*find_helper(char *line, int *ptr_i, int *ptr_j)
 	*ptr_i = i;
 	*ptr_j = j;
 	return (content);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*d;
+
+	i = 0;
+	d = (unsigned char *)s;
+	while (n > i)
+	{
+		d[i] = (unsigned char)c;
+		i++;
+	}
+	return (s);
+}
+
+int	cannot_open(t_main *program)
+{
+	free_token(program);
+	free_exec(program);
+	free_env(program);
+	exit(1);
 }
